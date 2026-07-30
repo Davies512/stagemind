@@ -1,0 +1,224 @@
+/* ==========================================================================
+   LIBRARY.CSS
+   Styles for Free Scripts & Free Monologues pages
+   ========================================================================== */
+
+/* Genre tab row */
+.genre-tabs {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 25px;
+    max-width: 850px;
+    width: 90%;
+}
+
+/* Card list container */
+#scripts-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 90%;
+    max-width: 850px;
+    margin-bottom: 40px;
+}
+
+/* Individual script/monologue card */
+#scripts-container .script-card {
+    background: rgba(17, 12, 28, 0.7);
+    border: 1px solid rgba(168, 85, 247, 0.15);
+    border-radius: 12px;
+    padding: 18px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    flex-wrap: wrap;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+#scripts-container .script-card:hover {
+    border-color: #a855f7;
+    box-shadow: 0 0 15px rgba(168, 85, 247, 0.1);
+}
+
+/* Card title */
+#scripts-container .script-card-title {
+    font-weight: 600;
+    color: #ffffff;
+    font-size: 1rem;
+    margin-bottom: 4px;
+}
+
+/* Card meta (genre · type) */
+#scripts-container .script-card-meta {
+    font-size: 0.82rem;
+    color: #554477;
+}
+
+/* Card action buttons row */
+#scripts-container .card-actions {
+    display: flex;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+/* Shared action button base */
+#scripts-container .action-btn {
+    padding: 8px 18px;
+    border-radius: 25px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s;
+    border: none;
+}
+
+/* View button — cyan */
+#scripts-container .btn-view {
+    background: rgba(0, 210, 255, 0.1);
+    border: 1px solid rgba(0, 210, 255, 0.4);
+    color: #00d2ff;
+}
+
+#scripts-container .btn-view:hover {
+    background: rgba(0, 210, 255, 0.25);
+    cursor: pointer;
+}
+
+/* Download button — purple */
+#scripts-container .btn-download {
+    background: rgba(168, 85, 247, 0.1);
+    border: 1px solid rgba(168, 85, 247, 0.4);
+    color: #a855f7;
+}
+
+#scripts-container .btn-download:hover {
+    background: rgba(168, 85, 247, 0.25);
+}
+
+/* ==========================================================================
+   PDF VIEWER MODAL — full screen overlay
+   ========================================================================== */
+#pdf-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(6, 3, 12, 0.95);
+    z-index: 9999;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+#pdf-modal.open {
+    display: flex;
+}
+
+/* Modal header bar */
+.pdf-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 960px;
+    margin-bottom: 15px;
+    flex-shrink: 0;
+}
+
+/* Modal title */
+.pdf-modal-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #00d2ff;
+}
+
+/* Close button */
+.pdf-modal-close {
+    background: none;
+    border: 1px solid rgba(168, 85, 247, 0.4);
+    color: #a855f7;
+    padding: 8px 18px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.2s;
+}
+
+.pdf-modal-close:hover {
+    background: rgba(168, 85, 247, 0.15);
+}
+
+/* Modal download button */
+#modal-download {
+    padding: 8px 18px;
+    border-radius: 25px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(168, 85, 247, 0.1);
+    border: 1px solid rgba(168, 85, 247, 0.4);
+    color: #a855f7;
+    transition: all 0.2s;
+}
+
+#modal-download:hover {
+    background: rgba(168, 85, 247, 0.25);
+}
+
+/* PDF iframe — fills remaining modal height */
+#pdf-frame {
+    width: 100%;
+    max-width: 960px;
+    flex: 1;
+    min-height: 0;
+    border: 1px solid rgba(168, 85, 247, 0.2);
+    border-radius: 10px;
+    background: #fff;
+}
+
+/* ==========================================================================
+   MOBILE ADJUSTMENTS FOR LIBRARY PAGES
+   ========================================================================== */
+@media (max-width: 768px) {
+
+    .genre-tabs {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    #scripts-container {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    #scripts-container .script-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    #scripts-container .card-actions {
+        width: 100%;
+    }
+
+    #pdf-modal {
+        padding: 12px;
+    }
+
+    .pdf-modal-header {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+}

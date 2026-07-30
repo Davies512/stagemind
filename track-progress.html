@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="logo/logo.jpg.png" type="image/png">
+    <meta name="theme-color" content="#06030c">
+
+    <!-- Active CDN Link for Font Awesome v6 Icons -->
+    <link rel="stylesheet" href="https://cloudflare.com">
+    <link rel="stylesheet" href="style.css">
+    <title>StageMind - Track Progress</title>
+</head>
+<body>
+
+    <!-- 1. SIDEBAR (Consistent Site Navigation) -->
+    <aside class="sidebar">
+        <div class="sidebar-brand">Stage Mind</div>
+        <nav class="nav-menu">
+            <a href="index.html" class="nav-item">Home</a>
+            
+            <div class="nav-category">Tools</div>
+            <a href="free-scripts.html" class="nav-item sub-item">Free Scripts</a>
+            <a href="free-monologues.html" class="nav-item sub-item">Free Monologues</a>
+            <a href="audition-cheat-sheet.html" class="nav-item sub-item">Audition Cheat Sheet</a>
+            <a href="about-me.html" class="nav-item sub-item">About Me</a>
+            
+            <a href="track-progress.html" class="nav-item active">Track Progress</a>
+
+            <!-- Coming Soon Status Panel -->
+            <div class="nav-category" style="margin-top: 40px; color: #554477;">Coming Soon</div>
+            <span class="nav-item" style="opacity: 0.5; cursor: not-allowed; padding: 4px 0;">AI Scene Partner</span>
+            <span class="nav-item" style="opacity: 0.5; cursor: not-allowed; padding: 4px 0;">Monologue Mode</span>
+            <span class="nav-item" style="opacity: 0.5; cursor: not-allowed; padding: 4px 0;">Audition Analyze</span>
+        </nav>
+    </aside>
+
+    <!-- 2. MAIN HUB CONTENT -->
+    <main class="main-content" style="flex-direction: column; justify-content: flex-start; align-items: center; width: 100%;">
+
+       <!-- Dashboard Header -->
+       <div class="dashboard-header">
+           <h1 class="main-title">
+               <a href="index.html" style="color: inherit; text-decoration: none;">Stage Mind</a>
+           </h1>
+           <h2 class="sub-title">Performance Progress</h2>
+       </div>
+
+       <!-- Rehearsal Metric Blocks (Dynamically updated via JS) -->
+       <section class="control-section" style="max-width: 800px; width: 90%; justify-content: space-around; margin-bottom: 25px;">
+           <div class="metric-block" style="text-align: center;">
+               <i class="fa-solid fa-fire" style="color: #ff5555; font-size: 1.8rem; margin-bottom: 5px;"></i>
+               <div style="font-size: 0.85rem; color: #888aa0; text-transform: uppercase;">Practice Streak</div>
+               <div id="dash-streak" style="font-size: 1.6rem; font-weight: bold; color: #ffffff;">0 Days</div>
+           </div>
+           
+           <div class="metric-block" style="text-align: center;">
+               <i class="fa-solid fa-bolt" style="color: #00ffcc; font-size: 1.8rem; margin-bottom: 5px;"></i>
+               <div style="font-size: 0.85rem; color: #888aa0; text-transform: uppercase;">Memorization</div>
+               <div id="dash-memorization" style="font-size: 1.6rem; font-weight: bold; color: #ffffff;">0% Avg</div>
+           </div>
+
+           <div class="metric-block" style="text-align: center;">
+               <i class="fa-solid fa-hourglass-half" style="color: #a855f7; font-size: 1.8rem; margin-bottom: 5px;"></i>
+               <div style="font-size: 0.85rem; color: #888aa0; text-transform: uppercase;">Total Time</div>
+               <div id="dash-time" style="font-size: 1.6rem; font-weight: bold; color: #ffffff;">0 Mins</div>
+           </div>
+       </section>
+
+       <!-- Performance Logs Data Section -->
+       <section class="feedback-section" style="max-width: 800px; width: 90%; padding: 25px;">
+           <h3 style="font-size: 1.2rem; margin-bottom: 15px;"><i class="fa-solid fa-chart-line" style="color: #00ffcc;"></i> Recent Rehearsals</h3>
+           
+           <div class="feedback-box" style="background: transparent; padding: 0;">
+               <div style="overflow-x: auto; width: 100%;">
+                   <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.95rem;">
+                       <thead>
+                           <tr style="border-bottom: 2px solid rgba(255, 255, 255, 0.1);">
+                               <th style="padding: 12px 8px; color: #888aa0;">Date</th>
+                               <th style="padding: 12px 8px; color: #888aa0;">Material / Title</th>
+                               <th style="padding: 12px 8px; color: #888aa0;">Mode</th>
+                               <th style="padding: 12px 8px; color: #888aa0;">Duration</th>
+                               <th style="padding: 12px 8px; color: #888aa0;">Status</th>
+                           </tr>
+                       </thead>
+                       <!-- Dynamic target injection container -->
+                       <tbody id="progress-table-body">
+                           <!-- Dynamic state rows populated via script.js -->
+                       </tbody>
+                   </table>
+               </div>
+           </div>
+       </section>
+
+    </main>
+
+     <script src="script.js"></script>
+    
+</body>
+</html>

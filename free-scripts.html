@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="logo/logo.jpg.png" type="image/png">
+    <meta name="theme-color" content="#06030c">
+    <link rel="stylesheet" href="https://cloudflare.com">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="library.css">
+    <title>StageMind - Free Scripts</title>
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-brand">Stage Mind</div>
+        <nav class="nav-menu">
+            <a href="index.html" class="nav-item">Home</a>
+            <div class="nav-category">Tools</div>
+            <a href="free-scripts.html" class="nav-item sub-item active">Free Scripts</a>
+            <a href="free-monologues.html" class="nav-item sub-item">Free Monologues</a>
+            <a href="audition-cheat-sheet.html" class="nav-item sub-item">Audition Cheat Sheet</a>
+            <a href="about-me.html" class="nav-item sub-item">About Me</a>
+            <a href="track-progress.html" class="nav-item">Track Progress</a>
+            <div class="nav-category" style="margin-top: 40px; color: #554477;">Coming Soon</div>
+            <span class="nav-item" style="opacity: 0.5; cursor: not-allowed; padding: 4px 0;">AI Scene Partner</span>
+            <span class="nav-item" style="opacity: 0.5; cursor: not-allowed; padding: 4px 0;">Monologue Mode</span>
+            <span class="nav-item" style="opacity: 0.5; cursor: not-allowed; padding: 4px 0;">Audition Analyze</span>
+        </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content" style="flex-direction: column; justify-content: flex-start; align-items: center; width: 100%;">
+
+        <div class="dashboard-header">
+            <h1 class="main-title"><a href="index.html">Stage Mind</a></h1>
+            <h2 class="sub-title">Free Scripts Library</h2>
+        </div>
+
+        <!-- Genre Tabs -->
+        <div class="genre-tabs" style="max-width: 850px; width: 90%;">
+            <button class="tab-btn active" onclick="StageMind.freeLibrary.showGenre('action', this)">Action</button>
+            <button class="tab-btn" onclick="StageMind.freeLibrary.showGenre('comedy', this)">Comedy</button>
+            <button class="tab-btn" onclick="StageMind.freeLibrary.showGenre('drama', this)">Drama</button>
+            <button class="tab-btn" onclick="StageMind.freeLibrary.showGenre('fantasy', this)">Fantasy</button>
+        </div>
+
+        <!-- Card List -->
+        <div class="scripts-list" style="width: 90%;" id="scripts-container"></div>
+
+    </main>
+
+    <!-- PDF Viewer Modal -->
+    <div class="pdf-modal" id="pdf-modal">
+        <div class="pdf-modal-header">
+            <span class="pdf-modal-title" id="modal-title">Script Viewer</span>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <a id="modal-download" href="#" class="action-btn btn-download">Download</a>
+                <button class="pdf-modal-close" onclick="StageMind.freeLibrary.closeModal()">X Close</button>
+            </div>
+        </div>
+        <iframe class="pdf-frame" id="pdf-frame" src=""></iframe>
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>

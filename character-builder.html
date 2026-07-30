@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="logo/logo.jpg.png" type="image/png">
+    <meta name="theme-color" content="#06030c">
+
+    <!-- Active CDN Link for Font Awesome v6 Icons -->
+    <link rel="stylesheet" href="https://cloudflare.com">
+    <link rel="stylesheet" href="style.css">
+    <title>StageMind - Character Builder</title>
+</head>
+<body>
+
+    <!-- 1. SIDEBAR (Consistent Navigation Panel) -->
+    <aside class="sidebar">
+        <div class="sidebar-brand">Stage Mind</div>
+        <nav class="nav-menu">
+            <a href="index.html" class="nav-item">Home</a>
+            
+            <div class="nav-category">Tools</div>
+            <a href="free-scripts.html" class="nav-item sub-item">Free Scripts</a>
+            <a href="free-monologues.html" class="nav-item sub-item">Free Monologues</a>
+            <a href="audition-cheat-sheet.html" class="nav-item sub-item">Audition Cheat Sheet</a>
+            <a href="about-me.html" class="nav-item sub-item">About Me</a>
+            
+            <a href="track-progress.html" class="nav-item">Track Progress</a>
+
+            <div class="nav-category" style="margin-top: 40px; color: #554477;">Coming Soon</div>
+            <span class="nav-item" style="opacity: 0.5; cursor: not-allowed; padding: 4px 0;">AI Scene Partner</span>
+            <span class="nav-item" style="opacity: 0.5; cursor: not-allowed; padding: 4px 0;">Monologue Mode</span>
+            <span class="nav-item" style="opacity: 0.5; cursor: not-allowed; padding: 4px 0;">Audition Analyze</span>
+        </nav>
+    </aside>
+
+    <!-- 2. MAIN HUB CONTENT -->
+    <main class="main-content" style="flex-direction: column; justify-content: flex-start; align-items: center; width: 100%;">
+
+       <!-- Dashboard Header -->
+       <div class="dashboard-header">
+           <h1 class="main-title">
+               <a href="index.html">Stage Mind</a>
+           </h1>
+           <h2 class="sub-title">AI Character Builder</h2>
+       </div>
+
+       <!-- User Input Form Section -->
+       <section class="script-section" style="max-width: 750px; padding: 25px; margin-bottom: 25px;">
+           <h3><i class="fa-solid fa-masks-theater" style="color: #00d2ff;"></i> Define Core Traits</h3>
+           <form id="character-form" style="display: flex; flex-direction: column; gap: 15px; margin-top: 15px;">
+               
+               <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                   <div style="flex: 2; min-width: 200px; display: flex; flex-direction: column; gap: 5px;">
+                       <label style="font-size: 0.85rem; color: #a855f7; text-transform: uppercase; font-weight: 600;">Character Name</label>
+                       <input type="text" id="char-name" required placeholder="e.g., John Doe" style="background: rgba(6, 3, 12, 0.8); border: 1px solid rgba(168, 85, 247, 0.3); border-radius: 8px; padding: 12px; color: white; outline: none; transition: border-color 0.2s;">
+                   </div>
+                   <div style="flex: 1; min-width: 100px; display: flex; flex-direction: column; gap: 5px;">
+                       <label style="font-size: 0.85rem; color: #a855f7; text-transform: uppercase; font-weight: 600;">Age</label>
+                       <input type="number" id="char-age" required placeholder="e.g., 28" style="background: rgba(6, 3, 12, 0.8); border: 1px solid rgba(168, 85, 247, 0.3); border-radius: 8px; padding: 12px; color: white; outline: none; transition: border-color 0.2s;">
+                   </div>
+               </div>
+
+               <div style="display: flex; flex-direction: column; gap: 5px;">
+                   <label style="font-size: 0.85rem; color: #a855f7; text-transform: uppercase; font-weight: 600;">Biggest Fear</label>
+                   <input type="text" id="char-fear" required placeholder="What drives their vulnerability or hesitation?" style="background: rgba(6, 3, 12, 0.8); border: 1px solid rgba(168, 85, 247, 0.3); border-radius: 8px; padding: 12px; color: white; outline: none; transition: border-color 0.2s;">
+               </div>
+
+               <div style="display: flex; flex-direction: column; gap: 5px;">
+                   <label style="font-size: 0.85rem; color: #a855f7; text-transform: uppercase; font-weight: 600;">Greatest Goal</label>
+                   <input type="text" id="char-goal" required placeholder="What is their core dramatic objective?" style="background: rgba(6, 3, 12, 0.8); border: 1px solid rgba(168, 85, 247, 0.3); border-radius: 8px; padding: 12px; color: white; outline: none; transition: border-color 0.2s;">
+               </div>
+
+               <div style="display: flex; flex-direction: column; gap: 5px;">
+                   <label style="font-size: 0.85rem; color: #a855f7; text-transform: uppercase; font-weight: 600;">Guilty Pleasure</label>
+                   <input type="text" id="char-pleasure" required placeholder="What adds a layer of human quirk to them?" style="background: rgba(6, 3, 12, 0.8); border: 1px solid rgba(168, 85, 247, 0.3); border-radius: 8px; padding: 12px; color: white; outline: none; transition: border-color 0.2s;">
+               </div>
+
+               <button type="submit" class="btn-start" style="width: fit-content; margin-top: 10px; padding: 12px 30px; border-radius: 50px;">
+                   <i class="fa-solid fa-wand-magic-sparkles"></i> Generate Blueprint
+               </button>
+           </form>
+       </section>
+
+       <!-- Dynamic Output Section Block -->
+       <section class="feedback-section" style="max-width: 750px; display: none;" id="output-section">
+           <h3><i class="fa-solid fa-brain" style="color: #00d2ff;"></i> AI Generated Analysis</h3>
+           <div class="feedback-box" style="background: transparent; padding: 0; display: flex; flex-direction: column; gap: 20px;">
+               
+               <div>
+                   <h4 style="color: #a855f7; margin: 0 0 5px 0; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 0.5px;">Character Profile</h4>
+                   <div id="out-profile" style="color: #ffffff; line-height: 1.6;"></div>
+               </div>
+
+               <div>
+                   <h4 style="color: #a855f7; margin: 0 0 5px 0; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 0.5px;">Motivations</h4>
+                   <div id="out-motivations" style="color: #ffffff; line-height: 1.6;"></div>
+               </div>
+
+               <div>
+                   <h4 style="color: #a855f7; margin: 0 0 5px 0; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 0.5px;">Relationships</h4>
+                   <div id="out-relationships" style="color: #ffffff; line-height: 1.6;"></div>
+               </div>
+
+               <div>
+                   <h4 style="color: #a855f7; margin: 0 0 5px 0; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 0.5px;">Backstory</h4>
+                   <div id="out-backstory" style="color: #ffffff; line-height: 1.6;"></div>
+               </div>
+
+           </div>
+       </section>
+
+    </main>
+
+     <script src="script.js"></script>
+
+</body>
+</html>
