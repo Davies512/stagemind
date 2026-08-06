@@ -221,12 +221,6 @@ body {
 
 .sidebar-overlay.open { display: block; }
 
-@media (max-width: 768px) {
-    .sidebar-brand {
-        padding-top: 50px;
-    }
-}
-
 /* ==========================================================================
    7. RESPONSIVE — MOBILE (max-width: 768px)
    ========================================================================== */
