@@ -576,6 +576,11 @@ const StageMind = {
         },
 
         openPDF(file, title) {
+            // On mobile, iframes can't display PDFs — open in new tab instead
+            if (window.innerWidth <= 768) {
+                window.open(file, '_blank');
+                return;
+            }
             document.getElementById('pdf-frame').src = file;
             document.getElementById('modal-title').innerText = title;
             const dl = document.getElementById('modal-download');
