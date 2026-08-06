@@ -1,10 +1,6 @@
 /* ==========================================================================
    1. CORE GLOBAL PAGE SETUP & NEON GRID BACKGROUND
    ========================================================================== */
-* {
-    box-sizing: border-box;
-}
-
 body {
     margin: 0;
     padding: 0;
@@ -32,7 +28,7 @@ body {
 }
 
 /* ==========================================================================
-   2. SIDEBAR
+   2. SHARED SIDEBAR NAVIGATION PANEL
    ========================================================================== */
 .sidebar {
     width: 260px;
@@ -43,12 +39,12 @@ body {
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
+    z-index: 10;
     position: fixed;
     top: 0;
     left: 0;
     height: 100vh;
     overflow-y: auto;
-    z-index: 100;
 }
 
 .sidebar-brand {
@@ -57,7 +53,6 @@ body {
     margin-bottom: 30px;
     color: #00d2ff;
     letter-spacing: 1px;
-    white-space: nowrap;
 }
 
 .nav-menu {
@@ -72,7 +67,6 @@ body {
     font-size: 0.95rem;
     padding: 8px 0;
     transition: color 0.2s ease, padding-left 0.2s ease;
-    display: block;
 }
 
 .nav-item:hover, .nav-item.active {
@@ -113,50 +107,6 @@ body {
     overflow-y: auto;
     margin-left: 260px;
     min-height: 100vh;
-    width: calc(100% - 260px);
-}
-
-/* Home page hero image */
-.center-logo {
-    max-width: 300px;
-    width: 100%;
-    height: auto;
-}
-
-/* Home page layout */
-.dashboard-center {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    width: 100%;
-    max-width: 900px;
-}
-
-.logo-group {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.main-title {
-    font-size: 2rem;
-    margin: 10px 0 5px 0;
-}
-
-.tagline {
-    color: #a855f7;
-    font-size: 1.1rem;
-    margin: 5px 0 15px 0;
-}
-
-.button-group {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 15px;
-    margin-top: 20px;
-    width: 100%;
 }
 
 .monologues-grid {
@@ -196,11 +146,11 @@ body {
 .partner-card p::-webkit-scrollbar-thumb { background: #a855f7; border-radius: 10px; }
 
 /* ==========================================================================
-   5. BUTTONS
+   5. BUTTONS & INTERACTIVE ELEMENTS
    ========================================================================== */
 .mode-btn {
     display: inline-block;
-    width: 220px;
+    width: 250px;
     padding: 14px 0;
     color: #ffffff;
     text-decoration: none;
@@ -233,107 +183,8 @@ body {
     box-shadow: 0 0 15px rgba(168, 85, 247, 0.5);
 }
 
-.btn-start {
-    background: rgba(168, 85, 247, 0.15);
-    border: 1px solid rgba(168, 85, 247, 0.5);
-    color: #ffffff;
-    padding: 12px 30px;
-    border-radius: 50px;
-    cursor: pointer;
-    font-size: 0.95rem;
-    font-weight: 600;
-    transition: all 0.2s;
-}
-
-.btn-start:hover {
-    background: #a855f7;
-    box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
-}
-
 /* ==========================================================================
-   6. SECTION STYLES
-   ========================================================================== */
-.script-section {
-    background: rgba(17, 12, 28, 0.6);
-    border: 1px solid rgba(168, 85, 247, 0.15);
-    border-radius: 12px;
-    padding: 25px;
-    width: 90%;
-    max-width: 750px;
-    margin-bottom: 25px;
-}
-
-.script-section h3 {
-    margin: 0 0 15px 0;
-    font-size: 1.1rem;
-    color: #ffffff;
-}
-
-.feedback-section {
-    background: rgba(17, 12, 28, 0.6);
-    border: 1px solid rgba(168, 85, 247, 0.15);
-    border-radius: 12px;
-    padding: 25px;
-    width: 90%;
-    max-width: 750px;
-    margin-bottom: 25px;
-}
-
-.feedback-section h3 {
-    margin: 0 0 15px 0;
-    font-size: 1.1rem;
-}
-
-.feedback-box {
-    background: rgba(6, 3, 12, 0.4);
-    border-radius: 8px;
-    padding: 20px;
-}
-
-.control-section {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    background: rgba(17, 12, 28, 0.4);
-    border: 1px solid rgba(168, 85, 247, 0.15);
-    border-radius: 12px;
-    padding: 20px;
-    width: 90%;
-    max-width: 800px;
-    margin-bottom: 25px;
-}
-
-.metric-block {
-    flex: 1;
-    min-width: 120px;
-    text-align: center;
-    padding: 10px;
-}
-
-.dashboard-header {
-    text-align: center;
-    padding: 20px 0 10px 0;
-    width: 100%;
-}
-
-.dashboard-header h1 {
-    margin: 0 0 5px 0;
-    font-size: 2rem;
-}
-
-.sub-title {
-    font-size: 1.3rem;
-    color: #ffffff;
-    margin: 0 0 20px 0;
-    font-weight: 700;
-}
-
-.placeholder-text {
-    color: #554477;
-}
-
-/* ==========================================================================
-   7. HAMBURGER BUTTON (hidden on desktop)
+   6. MOBILE HAMBURGER BUTTON
    ========================================================================== */
 .hamburger {
     display: none;
@@ -359,6 +210,7 @@ body {
     transition: all 0.3s;
 }
 
+/* Overlay behind open mobile sidebar */
 .sidebar-overlay {
     display: none;
     position: fixed;
@@ -369,96 +221,91 @@ body {
 
 .sidebar-overlay.open { display: block; }
 
+@media (max-width: 768px) {
+    .sidebar-brand {
+        padding-top: 50px;
+    }
+}
+
 /* ==========================================================================
-   8. MOBILE (max-width: 768px)
+   7. RESPONSIVE — MOBILE (max-width: 768px)
    ========================================================================== */
 @media (max-width: 768px) {
 
     /* Show hamburger */
     .hamburger { display: flex; }
 
-    /* Sidebar slides in from left over content */
+    /* Sidebar slides in from left */
     .sidebar {
         left: -280px;
         transition: left 0.3s ease;
-        z-index: 150;
-        width: 260px;
     }
 
     .sidebar.open { left: 0; }
 
-    /* Main content full width */
+    /* Main content full width, no left margin */
     .main-content {
         margin-left: 0;
+        padding: 70px 16px 30px 16px;
         width: 100%;
-        padding: 60px 16px 30px 16px;
-    }
-
-    /* Hero logo smaller on mobile */
-    .center-logo {
-        max-width: 180px;
-    }
-
-    /* Main title smaller */
-    .main-title { font-size: 1.4rem !important; }
-    .sub-title  { font-size: 1rem !important; }
-
-    .dashboard-header {
-        padding: 10px 0 5px 0;
-    }
-
-    .dashboard-header h1 {
-        font-size: 1.4rem;
     }
 
     /* Stack mode buttons vertically */
     .button-group {
+        display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 12px;
+        gap: 14px;
+        width: 100%;
     }
 
     .mode-btn {
         width: 100%;
-        max-width: 300px;
+        max-width: 320px;
+        box-sizing: border-box;
     }
 
-    /* Sections full width */
+    /* Dashboard header */
+    .dashboard-header {
+        text-align: center;
+        padding: 0 10px;
+    }
+
+    .main-title { font-size: 1.6rem !important; }
+    .sub-title  { font-size: 1.1rem !important; }
+
+    /* Forms full width */
     .script-section,
     .feedback-section {
         width: 100% !important;
         max-width: 100% !important;
-        padding: 16px !important;
+        padding: 18px !important;
+        box-sizing: border-box;
     }
 
+    /* Wrap flex rows */
     .control-section {
+        flex-wrap: wrap;
+        gap: 15px;
+        padding: 15px !important;
         width: 100% !important;
         max-width: 100% !important;
-        padding: 15px !important;
+        box-sizing: border-box;
     }
 
     /* Table scrolls horizontally */
-    .feedback-section table {
-        font-size: 0.78rem;
-        display: block;
-        overflow-x: auto;
-    }
+    table { font-size: 0.82rem; }
 
     /* Log form */
     #log-form-section {
         width: 100% !important;
         max-width: 100% !important;
-        padding: 16px !important;
-    }
-
-    /* About page vision blocks stack */
-    .control-section > div {
-        min-width: 80px;
+        box-sizing: border-box;
     }
 }
 
 /* ==========================================================================
-   9. TABLET (769px - 1024px)
+   8. RESPONSIVE — TABLET (max-width: 1024px)
    ========================================================================== */
 @media (max-width: 1024px) and (min-width: 769px) {
 
@@ -470,11 +317,13 @@ body {
 
     .main-content {
         margin-left: 220px;
-        width: calc(100% - 220px);
         padding: 30px 24px;
     }
 
-    .mode-btn { width: 180px; }
+    .mode-btn { width: 200px; }
 
-    .center-logo { max-width: 220px; }
+    .script-section,
+    .feedback-section {
+        max-width: 95% !important;
+    }
 }
