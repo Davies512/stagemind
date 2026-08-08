@@ -377,6 +377,11 @@ body {
     /* Show hamburger */
     .hamburger { display: flex; }
 
+    /* Push sidebar brand down to clear the hamburger button */
+    .sidebar-brand {
+        padding-top: 55px;
+    }
+
     /* Sidebar slides in from left over content */
     .sidebar {
         left: -280px;
@@ -391,7 +396,7 @@ body {
     .main-content {
         margin-left: 0;
         width: 100%;
-        padding: 60px 16px 30px 16px;
+        padding: 70px 16px 30px 16px;
     }
 
     /* Hero logo smaller on mobile */
@@ -399,7 +404,7 @@ body {
         max-width: 180px;
     }
 
-    /* Main title smaller */
+    /* Titles smaller */
     .main-title { font-size: 1.4rem !important; }
     .sub-title  { font-size: 1rem !important; }
 
