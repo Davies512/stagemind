@@ -114,8 +114,36 @@ const DEMO_RESPONSES = {
         body:          'Keep your weight slightly forward throughout this scene — it signals engagement and investment without telegraphing aggression. Eye contact should be specific and intentional not constant. Look away when you are processing not when you are uncomfortable — the distinction tells the audience everything about your characters inner life. Find one specific gesture that belongs to this character and use only that.',
         subtext:       'Almost nothing in this scene means what it literally says and that is where your performance lives. Every line has a want beneath it — find that want and play it instead of the words. The moments when your character is listening are as important as the moments when they speak. Your scene partner is giving you information in every line — let that information visibly land before you respond.',
         alternatives:  'Try the scene once playing your character as someone who desperately wants to leave but cannot. Then try it as someone who desperately wants to stay but will not admit it. Notice how the same lines read completely differently depending on that single underlying choice. A third option — play every line as though it might be the last thing you ever say to this person. That urgency will transform the scenes stakes immediately.'
-    }
+    },
+    monologueMode: {
+        accuracy:      'You held the shape of the piece well — the words that landed differently from the script were mostly small connector words, which is completely normal and did not disrupt the meaning. One section in the middle drifted further from the text, so it is worth running that passage in isolation a few more times until it is locked in.',
+        vocalDelivery: 'Your pacing opened strong with real clarity, though it sped up noticeably in the second half — that usually happens when nerves creep in as the piece builds. Your pitch variety was good on the big moments but flattened out during the quieter transitions, which is exactly where a little more vocal color would help.',
+        emotional:     'There was genuine commitment in the last third of the piece — that is where you sounded most connected to the character rather than reciting. Earlier sections felt a touch presentational, like you were performing the emotion rather than living inside it. Trust the stillness more in the opening lines before the intensity needs to rise.',
+        nextSteps:     'Run the middle section on its own three times focusing only on staying in the moment, not on getting the words exact. Record yourself again and listen specifically for where your pace speeds up — mark that spot and practice slowing down right there. Finally, try the opening lines seated and quiet before standing into the rest, to find that grounded starting point.'
+    },
+    auditionPre: {
+        focusAreas:       'Anchor your prep on the first ten seconds — casting decides more than people admit before you have said your third line, so walk in already inside the character, not warming up into it. Know your character objective in one sentence you could say out loud if asked. Everything else in the room is secondary to those two things.',
+        roomStrategy:      'Treat the reader as your actual scene partner, not an obstacle to get through — real listening reads instantly on camera and in person. Slate simply and confidently, then take a breath before starting; rushing the slate is the most common tell of nerves. If you are offered a redirect, take it as a gift, not a correction.',
+        redFlags:          'Avoid indicating emotion with your face before your body and voice have committed to it — it reads as performed rather than felt. Do not apologize or comment on your own take, even lightly; it undercuts the work you just did. Watch for filling every pause with movement — stillness is a choice, not empty space.',
+        confidenceAnchor: 'Remind yourself that you were called in because someone already believes you could be right for this — you do not need to prove your existence in the room, only show them your specific choice. Whatever happens with this one, it is one data point, not a verdict on your work.'
+    },
+    auditionPost: {
+        whatWorked:      'From what you have described, your preparation clearly showed — knowing your objective going in gave you something solid to play even under nerves. The moments you mention connecting with the reader are usually the ones casting remembers most, more than any technically perfect line reading.',
+        whatToImprove:   'It sounds like the pacing pressure you felt affected your listening in places — that is common and fixable with more redirect practice, not a talent gap. Next time, build in one deliberate breath before your first line so the nerves do not set the tempo for the whole take.',
+        callbackRead:    'Based on your account, this reads as a solid, professional audition rather than a clear miss — the kind that keeps you on a casting directors radar even without an immediate callback. Auditions rarely fail on one moment; they add up over a body of work with that room.',
+        actionItems:     'Write down the one redirect or note you received while it is fresh, and drill it specifically before your next audition. Log this one in Track Progress with an honest self-rating so you can see your pattern over time, not just this single outing. Then let it go — ruminating on a single room rarely improves the next one.'
+    },
+    scenePartner: [
+        'Wait — say that again. I do not think I heard you right.',
+        'You always do this. You say something like that and expect me to just move on.',
+        'Fine. If that is how you want to play it, fine.',
+        'I was not expecting you to say that. Not tonight, of all nights.',
+        'Do not turn this around on me. I came here because I needed to say this.',
+        'Maybe you are right. Maybe I have been avoiding this for too long.'
+    ]
 };
+
+let scenePartnerDemoIndex = 0;
 
 // ============================================================
 // SHARED UTILITIES
@@ -149,8 +177,14 @@ function applyGlowFocus() {
 function callAIDemo(type) {
     return new Promise(function(resolve) {
         setTimeout(function() {
-            resolve(DEMO_RESPONSES[type]);
-        }, 2000);
+            if (type === 'scenePartner') {
+                const line = DEMO_RESPONSES.scenePartner[scenePartnerDemoIndex % DEMO_RESPONSES.scenePartner.length];
+                scenePartnerDemoIndex++;
+                resolve(line);
+            } else {
+                resolve(DEMO_RESPONSES[type]);
+            }
+        }, 1200);
     });
 }
 
@@ -753,6 +787,392 @@ const StageMind = {
     },
 
     // ----------------------------------------------------------
+    // 7. AI SCENE PARTNER (Premium — voice)
+    // ----------------------------------------------------------
+    scenePartner: {
+        recognition: null,
+        listening: false,
+        script: '',
+        yourCharacter: '',
+        history: [], // { speaker: 'you'|'partner', text }
+        startTime: null,
+
+        getSpeechRecognition() {
+            const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+            return SR ? new SR() : null;
+        },
+
+        init() {
+            const form = document.getElementById('partner-setup-form');
+            if (!form) return;
+
+            applyGlowFocus(document.getElementById('partner-your-character'));
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                StageMind.scenePartner.beginSession();
+            });
+
+            const micBtn = document.getElementById('partner-mic-btn');
+            if (micBtn) micBtn.addEventListener('click', function() {
+                StageMind.scenePartner.toggleListening();
+            });
+
+            const endBtn = document.getElementById('partner-end-btn');
+            if (endBtn) endBtn.addEventListener('click', function() {
+                StageMind.scenePartner.endSession();
+            });
+        },
+
+        beginSession() {
+            this.script        = document.getElementById('partner-script').value.trim();
+            this.yourCharacter = document.getElementById('partner-your-character').value.trim();
+            this.history        = [];
+            this.startTime       = Date.now();
+
+            if (!this.script || !this.yourCharacter) {
+                alert('Please paste a scene and tell StageMind which character you are reading.');
+                return;
+            }
+
+            document.getElementById('partner-setup').style.display = 'none';
+            const session = document.getElementById('partner-session');
+            session.style.display = 'block';
+            session.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+            const nameEl = document.getElementById('partner-session-name');
+            if (nameEl) nameEl.innerText = 'Reading as: ' + this.yourCharacter;
+
+            this.renderTranscript();
+        },
+
+        renderTranscript() {
+            const box = document.getElementById('partner-transcript');
+            if (!box) return;
+            box.innerHTML = this.history.map(function(turn) {
+                const cls   = turn.speaker === 'you' ? 'you' : 'partner';
+                const label = turn.speaker === 'you' ? 'You' : 'Scene Partner';
+                return '<div class="chat-bubble ' + cls + '"><span class="chat-label">' + label + '</span>' + turn.text + '</div>';
+            }).join('') || '<div style="color:#554477; text-align:center; padding:20px;">Tap the mic and say your first line to begin.</div>';
+            box.scrollTop = box.scrollHeight;
+        },
+
+        toggleListening() {
+            if (this.listening) { this.stopListening(); return; }
+
+            const recog = this.getSpeechRecognition();
+            if (!recog) {
+                alert('Voice recognition is not supported in this browser. Try Chrome on desktop or Android.');
+                return;
+            }
+            this.recognition = recog;
+            recog.lang = 'en-US';
+            recog.interimResults = false;
+            recog.maxAlternatives = 1;
+
+            const self = this;
+            recog.onresult = function(event) {
+                const said = event.results[0][0].transcript;
+                self.handleYourLine(said);
+            };
+            recog.onerror = function() { self.stopListening(); };
+            recog.onend = function() { self.stopListening(); };
+
+            recog.start();
+            this.listening = true;
+            this.setMicUI(true);
+        },
+
+        stopListening() {
+            if (this.recognition) { try { this.recognition.stop(); } catch(e) {} }
+            this.listening = false;
+            this.setMicUI(false);
+        },
+
+        setMicUI(isListening) {
+            const micBtn  = document.getElementById('partner-mic-btn');
+            const status  = document.getElementById('partner-mic-status');
+            const wave    = document.getElementById('partner-waveform');
+            if (micBtn) micBtn.classList.toggle('recording', isListening);
+            if (status) { status.innerText = isListening ? 'Listening...' : 'Tap to speak your line'; status.classList.toggle('live', isListening); }
+            if (wave)   wave.classList.toggle('idle', !isListening);
+        },
+
+        async handleYourLine(text) {
+            this.history.push({ speaker: 'you', text: text });
+            this.renderTranscript();
+
+            const status = document.getElementById('partner-mic-status');
+            if (status) status.innerText = 'Scene partner is responding...';
+
+            try {
+                let reply;
+                if (DEMO_MODE) {
+                    reply = await callAIDemo('scenePartner');
+                } else {
+                    const context = this.history.map(function(t) {
+                        return (t.speaker === 'you' ? this.yourCharacter : 'Scene Partner') + ': ' + t.text;
+                    }, this).join('\n');
+                    const prompt = 'You are improvising as the OTHER character(s) opposite an actor rehearsing this scene. Stay strictly in character, respond with only the next spoken line (no stage directions, no labels, no quotation marks), keep it natural and under 40 words.\n\nFULL SCENE FOR CONTEXT:\n' + this.script + '\n\nThe human actor is reading the role of: ' + this.yourCharacter + '\n\nCONVERSATION SO FAR:\n' + context + '\n\nRespond now as the scene partner:';
+                    reply = await callAI(prompt);
+                }
+                this.history.push({ speaker: 'partner', text: reply.trim() });
+                this.renderTranscript();
+                this.speak(reply);
+            } catch (err) {
+                console.error('Scene Partner error:', err);
+                this.history.push({ speaker: 'partner', text: 'Something went wrong reaching the AI scene partner: ' + err.message });
+                this.renderTranscript();
+            } finally {
+                if (status) status.innerText = 'Tap to speak your line';
+            }
+        },
+
+        speak(text) {
+            if (!('speechSynthesis' in window)) return;
+            const utter = new SpeechSynthesisUtterance(text);
+            utter.rate = 1;
+            window.speechSynthesis.speak(utter);
+        },
+
+        endSession() {
+            this.stopListening();
+            const mins = this.startTime ? Math.max(1, Math.round((Date.now() - this.startTime) / 60000)) : 0;
+            StageMind.trackProgress.autoLog('AI Scene Partner Rehearsal', 'AI Scene Partner');
+            document.getElementById('partner-session').style.display = 'none';
+            document.getElementById('partner-setup').style.display = 'block';
+            alert('Rehearsal logged (' + mins + ' min) to Track Progress.');
+        }
+    },
+
+    // ----------------------------------------------------------
+    // 8. MONOLOGUE MODE (Premium — voice recording + verbal feedback)
+    // ----------------------------------------------------------
+    monologueMode: {
+        recognition: null,
+        listening: false,
+        liveTranscript: '',
+
+        getSpeechRecognition() {
+            const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+            return SR ? new SR() : null;
+        },
+
+        init() {
+            const btn = document.getElementById('record-btn');
+            if (!btn) return;
+
+            btn.addEventListener('click', function() {
+                StageMind.monologueMode.toggleRecording();
+            });
+
+            const playBtn = document.getElementById('play-feedback-btn');
+            if (playBtn) playBtn.addEventListener('click', function() {
+                StageMind.monologueMode.playFeedbackAloud();
+            });
+        },
+
+        toggleRecording() {
+            if (this.listening) { this.stopRecording(); return; }
+
+            const recog = this.getSpeechRecognition();
+            if (!recog) {
+                alert('Voice recognition is not supported in this browser. Try Chrome on desktop or Android.');
+                return;
+            }
+            this.recognition = recog;
+            this.liveTranscript = '';
+            recog.lang = 'en-US';
+            recog.continuous = true;
+            recog.interimResults = true;
+
+            const self = this;
+            const liveEl = document.getElementById('live-transcript');
+            if (liveEl) liveEl.innerText = '';
+
+            recog.onresult = function(event) {
+                let finalText = '';
+                for (let i = 0; i < event.results.length; i++) {
+                    finalText += event.results[i][0].transcript + ' ';
+                }
+                self.liveTranscript = finalText.trim();
+                if (liveEl) liveEl.innerText = self.liveTranscript;
+            };
+            recog.onerror = function() { self.stopRecording(); };
+
+            recog.start();
+            this.listening = true;
+            this.setMicUI(true);
+        },
+
+        stopRecording() {
+            if (this.recognition) { try { this.recognition.stop(); } catch(e) {} }
+            this.listening = false;
+            this.setMicUI(false);
+            if (this.liveTranscript) this.getFeedback();
+        },
+
+        setMicUI(isRecording) {
+            const btn    = document.getElementById('record-btn');
+            const status = document.getElementById('record-status');
+            const wave   = document.getElementById('record-waveform');
+            if (btn) btn.classList.toggle('recording', isRecording);
+            if (status) { status.innerText = isRecording ? 'Recording... tap to stop' : 'Tap to record your performance'; status.classList.toggle('live', isRecording); }
+            if (wave) wave.classList.toggle('idle', !isRecording);
+        },
+
+        async getFeedback() {
+            const outputSection = document.getElementById('mode-output');
+            const referenceText = (document.getElementById('monologue-mode-input') || {}).value || '';
+            const outputIds = ['out-accuracy', 'out-vocal-delivery', 'out-emotional', 'out-next-steps'];
+
+            outputSection.style.display = 'block';
+            outputSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+            if (hasReachedLimit()) { showLimitMessage(outputIds); return; }
+
+            outputIds.forEach(function(id) { setLoading(id, 'feedback'); });
+
+            try {
+                let sections;
+                if (DEMO_MODE) {
+                    sections = await callAIDemo('monologueMode');
+                } else {
+                    const prompt = 'You are a supportive acting coach giving verbal feedback right after a live monologue take. Below is a speech-to-text transcript of what the actor actually said aloud' + (referenceText ? ', alongside the monologue text they intended to perform' : '') + '. Use EXACTLY these four section headers on their own lines:\n\nACCURACY\nVOCAL DELIVERY\nEMOTIONAL COMMITMENT\nNEXT STEPS\n\nWrite as if speaking directly and warmly to the actor, 2-4 sentences each, conversational not clinical.\n\n' + (referenceText ? 'INTENDED MONOLOGUE TEXT:\n' + referenceText + '\n\n' : '') + 'WHAT THE ACTOR ACTUALLY SAID (transcribed):\n' + this.liveTranscript;
+                    const text = await callAI(prompt);
+                    sections = parseStructuredResponse(text, {
+                        'ACCURACY':               'accuracy',
+                        'VOCAL DELIVERY':         'vocalDelivery',
+                        'EMOTIONAL COMMITMENT':   'emotional',
+                        'NEXT STEPS':             'nextSteps'
+                    });
+                }
+                setContent('out-accuracy',        sections.accuracy);
+                setContent('out-vocal-delivery',  sections.vocalDelivery);
+                setContent('out-emotional',       sections.emotional);
+                setContent('out-next-steps',      sections.nextSteps);
+                this.lastFeedback = [sections.accuracy, sections.vocalDelivery, sections.emotional, sections.nextSteps].join('. ');
+                incrementUsage();
+                StageMind.trackProgress.autoLog('Monologue Mode Take', 'Monologue Mode');
+            } catch (err) {
+                console.error('Monologue Mode error:', err);
+                outputIds.forEach(function(id) { setError(id, 'Something went wrong: ' + err.message); });
+            }
+        },
+
+        playFeedbackAloud() {
+            if (!('speechSynthesis' in window) || !this.lastFeedback) return;
+            const utter = new SpeechSynthesisUtterance(this.lastFeedback);
+            window.speechSynthesis.speak(utter);
+        }
+    },
+
+    // ----------------------------------------------------------
+    // 9. AUDITION ANALYZE (Premium — pre/post audition)
+    // ----------------------------------------------------------
+    auditionAnalyze: {
+        init() {
+            const preForm  = document.getElementById('pre-audition-form');
+            const postForm = document.getElementById('post-audition-form');
+            if (!preForm && !postForm) return;
+
+            if (preForm) preForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                await StageMind.auditionAnalyze.runPre();
+            });
+            if (postForm) postForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                await StageMind.auditionAnalyze.runPost();
+            });
+
+            applyGlowFocus.apply(null, Array.from(document.querySelectorAll('#pre-audition-form input, #pre-audition-form textarea, #post-audition-form textarea')));
+        },
+
+        showTab(which, btnEl) {
+            document.querySelectorAll('#audition-tabs .tab-btn').forEach(function(b) { b.classList.remove('active'); });
+            if (btnEl) btnEl.classList.add('active');
+            document.getElementById('pre-audition-panel').style.display  = which === 'pre'  ? 'block' : 'none';
+            document.getElementById('post-audition-panel').style.display = which === 'post' ? 'block' : 'none';
+        },
+
+        async runPre() {
+            const role  = document.getElementById('pre-role').value.trim();
+            const sides = document.getElementById('pre-sides').value.trim();
+            const outputIds = ['out-focus-areas', 'out-room-strategy', 'out-red-flags', 'out-confidence-anchor'];
+
+            const outputSection = document.getElementById('pre-output');
+            outputSection.style.display = 'block';
+            outputSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+            if (hasReachedLimit()) { showLimitMessage(outputIds); return; }
+            outputIds.forEach(function(id) { setLoading(id, 'pre-audition prep'); });
+
+            try {
+                let sections;
+                if (DEMO_MODE) {
+                    sections = await callAIDemo('auditionPre');
+                } else {
+                    const prompt = 'You are an audition coach preparing an actor minutes before they go into the room. Use EXACTLY these four section headers on their own lines:\n\nFOCUS AREAS\nROOM STRATEGY\nRED FLAGS TO AVOID\nCONFIDENCE ANCHOR\n\nWrite 2-4 sentences under each, direct and practical.\n\nROLE / CHARACTER:\n' + role + '\n\nSIDES / SCENE:\n' + sides;
+                    const text = await callAI(prompt);
+                    sections = parseStructuredResponse(text, {
+                        'FOCUS AREAS':          'focusAreas',
+                        'ROOM STRATEGY':        'roomStrategy',
+                        'RED FLAGS TO AVOID':   'redFlags',
+                        'CONFIDENCE ANCHOR':    'confidenceAnchor'
+                    });
+                }
+                setContent('out-focus-areas',        sections.focusAreas);
+                setContent('out-room-strategy',       sections.roomStrategy);
+                setContent('out-red-flags',           sections.redFlags);
+                setContent('out-confidence-anchor',   sections.confidenceAnchor);
+                incrementUsage();
+                StageMind.trackProgress.autoLog(role || 'Audition Prep', 'Audition Analyze (Pre)');
+            } catch (err) {
+                console.error('Audition Analyze (pre) error:', err);
+                outputIds.forEach(function(id) { setError(id, 'Something went wrong: ' + err.message); });
+            }
+        },
+
+        async runPost() {
+            const summary = document.getElementById('post-summary').value.trim();
+            const rating  = document.getElementById('post-rating').value;
+            const outputIds = ['out-what-worked', 'out-what-to-improve', 'out-callback-read', 'out-action-items'];
+
+            const outputSection = document.getElementById('post-output');
+            outputSection.style.display = 'block';
+            outputSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+            if (hasReachedLimit()) { showLimitMessage(outputIds); return; }
+            outputIds.forEach(function(id) { setLoading(id, 'post-audition analysis'); });
+
+            try {
+                let sections;
+                if (DEMO_MODE) {
+                    sections = await callAIDemo('auditionPost');
+                } else {
+                    const prompt = 'You are an audition coach helping an actor reflect right after leaving the room. Use EXACTLY these four section headers on their own lines:\n\nWHAT WORKED\nWHAT TO IMPROVE\nCALLBACK READ\nACTION ITEMS\n\nWrite 2-4 sentences under each, honest and encouraging, not empty positivity.\n\nACTOR SELF-RATING (1-5): ' + rating + '\n\nACTOR ACCOUNT OF THE AUDITION:\n' + summary;
+                    const text = await callAI(prompt);
+                    sections = parseStructuredResponse(text, {
+                        'WHAT WORKED':        'whatWorked',
+                        'WHAT TO IMPROVE':    'whatToImprove',
+                        'CALLBACK READ':      'callbackRead',
+                        'ACTION ITEMS':       'actionItems'
+                    });
+                }
+                setContent('out-what-worked',      sections.whatWorked);
+                setContent('out-what-to-improve',  sections.whatToImprove);
+                setContent('out-callback-read',    sections.callbackRead);
+                setContent('out-action-items',     sections.actionItems);
+                incrementUsage();
+                StageMind.trackProgress.autoLog('Audition Reflection', 'Audition Analyze (Post)');
+            } catch (err) {
+                console.error('Audition Analyze (post) error:', err);
+                outputIds.forEach(function(id) { setError(id, 'Something went wrong: ' + err.message); });
+            }
+        }
+    },
+
+    // ----------------------------------------------------------
     // PAGE ROUTER
     // ----------------------------------------------------------
     router() {
@@ -764,6 +1184,9 @@ const StageMind = {
         if (path.includes('free-scripts'))          this.freeLibrary.init('scripts');
         if (path.includes('free-monologues'))       this.freeLibrary.init('monologues');
         if (path.includes('track-progress'))        this.trackProgress.init();
+        if (path.includes('ai-scene-partner'))       this.scenePartner.init();
+        if (path.includes('monologue-mode'))         this.monologueMode.init();
+        if (path.includes('audition-analyze'))       this.auditionAnalyze.init();
     }
 };
 
