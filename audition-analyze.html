@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="logo/logo.jpg.png" type="image/png">
+    <meta name="theme-color" content="#06030c">
+    <link rel="stylesheet" href="https://cloudflare.com">
+    <link rel="stylesheet" href="style.css">
+    <title>StageMind - Audition Analyze</title>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="sidebar-brand">Stage Mind</div>
+        <nav class="nav-menu">
+            <a href="index.html" class="nav-item">Home</a>
+            <div class="nav-category">Tools</div>
+            <a href="free-scripts.html" class="nav-item sub-item">Free Scripts</a>
+            <a href="free-monologues.html" class="nav-item sub-item">Free Monologues</a>
+            <a href="audition-cheat-sheet.html" class="nav-item sub-item">Audition Cheat Sheet</a>
+            <a href="about-me.html" class="nav-item sub-item">About Me</a>
+            <a href="track-progress.html" class="nav-item">Track Progress</a>
+            <div class="nav-category" style="margin-top: 40px; color: #a855f7;">✦ Premium</div>
+            <a href="ai-scene-partner.html" class="nav-item sub-item" style="color: #a855f7; opacity: 0.8;">AI Scene Partner</a>
+            <a href="monologue-mode.html" class="nav-item sub-item" style="color: #a855f7; opacity: 0.8;">Monologue Mode</a>
+            <a href="audition-analyze.html" class="nav-item sub-item active" style="color: #a855f7;">Audition Analyze</a>
+            <a href="#" class="nav-item" style="margin-top: 20px; color: #00ffcc; font-weight: 700; font-size: 0.85rem;">✦ Subscribe to Premium</a>
+        </nav>
+    </aside>
+
+    <main class="main-content" style="flex-direction: column; justify-content: flex-start; align-items: center; width: 100%;">
+
+       <div class="dashboard-header">
+           <h1 class="main-title"><a href="index.html">Stage Mind</a></h1>
+           <h2 class="sub-title">Audition Analyze <span style="color:#a855f7; font-size:0.9rem;">✦ Premium</span></h2>
+       </div>
+
+       <div class="genre-tabs" id="audition-tabs" style="max-width: 750px; width: 90%;">
+           <button type="button" class="tab-btn active" onclick="StageMind.auditionAnalyze.showTab('pre', this)">Pre-Audition</button>
+           <button type="button" class="tab-btn" onclick="StageMind.auditionAnalyze.showTab('post', this)">Post-Audition</button>
+       </div>
+
+       <!-- PRE-AUDITION PANEL -->
+       <div id="pre-audition-panel" style="width: 90%; max-width: 750px; display: block;">
+           <section class="script-section" style="padding: 25px; margin-bottom: 25px; width: 100%; max-width: none;">
+               <h3><i class="fa-solid fa-clipboard-check" style="color: #00d2ff;"></i> Prepare For The Room</h3>
+               <form id="pre-audition-form" style="display: flex; flex-direction: column; gap: 15px; margin-top: 15px;">
+                   <div style="display: flex; flex-direction: column; gap: 5px;">
+                       <label style="font-size: 0.85rem; color: #a855f7; text-transform: uppercase; font-weight: 600;">Role / Character</label>
+                       <input type="text" id="pre-role" required placeholder="e.g., Lead detective in a crime drama pilot" style="background: rgba(6, 3, 12, 0.8); border: 1px solid rgba(168, 85, 247, 0.3); border-radius: 8px; padding: 12px; color: white; outline: none; transition: border-color 0.2s;">
+                   </div>
+                   <div style="display: flex; flex-direction: column; gap: 5px;">
+                       <label style="font-size: 0.85rem; color: #a855f7; text-transform: uppercase; font-weight: 600;">Sides / Scene</label>
+                       <textarea id="pre-sides" required placeholder="Paste your audition sides or a description of the scene..." style="width: 100%; height: 160px; background: rgba(6, 3, 12, 0.8); border: 1px solid rgba(168, 85, 247, 0.3); border-radius: 8px; padding: 15px; color: white; font-family: inherit; font-size: 0.95rem; resize: vertical; outline: none; box-sizing: border-box; transition: border-color 0.2s;"></textarea>
+                   </div>
+                   <button type="submit" class="btn-start" style="width: fit-content; margin-top: 10px; padding: 12px 30px; border-radius: 50px;">
+                       <i class="fa-solid fa-bolt"></i> Get Pre-Audition Prep
+                   </button>
+               </form>
+           </section>
+
+           <section class="feedback-section" id="pre-output" style="display: none; width: 100%; max-width: none;">
+               <h3><i class="fa-solid fa-list-check" style="color: #00d2ff;"></i> Pre-Audition Prep</h3>
+               <div class="feedback-box" style="background: transparent; padding: 0; display: flex; flex-direction: column; gap: 20px;">
+                   <div>
+                       <h4 style="color: #a855f7; margin: 0 0 5px 0; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 0.5px;">Focus Areas</h4>
+                       <div id="out-focus-areas" style="color: #ffffff; line-height: 1.6;"></div>
+                   </div>
+                   <div>
+                       <h4 style="color: #a855f7; margin: 0 0 5px 0; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 0.5px;">Room Strategy</h4>
+                       <div id="out-room-strategy" style="color: #ffffff; line-height: 1.6;"></div>
+                   </div>
+                   <div>
+                       <h4 style="color: #a855f7; margin: 0 0 5px 0; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 0.5px;">Red Flags To Avoid</h4>
+                       <div id="out-red-flags" style="color: #ffffff; line-height: 1.6;"></div>
+                   </div>
+                   <div>
+                       <h4 style="color: #a855f7; margin: 0 0 5px 0; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 0.5px;">Confidence Anchor</h4>
+                       <div id="out-confidence-anchor" style="color: #ffffff; line-height: 1.6;"></div>
+                   </div>
+               </div>
+           </section>
+       </div>
+
+       <!-- POST-AUDITION PANEL -->
+       <div id="post-audition-panel" style="width: 90%; max-width: 750px; display: none;">
+           <section class="script-section" style="padding: 25px; margin-bottom: 25px; width: 100%; max-width: none;">
+               <h3><i class="fa-solid fa-comments" style="color: #00d2ff;"></i> Reflect On The Audition</h3>
+               <form id="post-audition-form" style="display: flex; flex-direction: column; gap: 15px; margin-top: 15px;">
+                   <div style="display: flex; flex-direction: column; gap: 5px;">
+                       <label style="font-size: 0.85rem; color: #a855f7; text-transform: uppercase; font-weight: 600;">How Did It Go?</label>
+                       <textarea id="post-summary" required placeholder="Describe what happened in the room — what you tried, how the reader responded, any redirects you got..." style="width: 100%; height: 160px; background: rgba(6, 3, 12, 0.8); border: 1px solid rgba(168, 85, 247, 0.3); border-radius: 8px; padding: 15px; color: white; font-family: inherit; font-size: 0.95rem; resize: vertical; outline: none; box-sizing: border-box; transition: border-color 0.2s;"></textarea>
+                   </div>
+                   <div style="display: flex; flex-direction: column; gap: 5px; max-width: 220px;">
+                       <label style="font-size: 0.85rem; color: #a855f7; text-transform: uppercase; font-weight: 600;">Self-Rating (1-5)</label>
+                       <select id="post-rating" style="background: rgba(6, 3, 12, 0.8); border: 1px solid rgba(168, 85, 247, 0.3); border-radius: 8px; padding: 12px; color: white; outline: none;">
+                           <option value="1">1 - Rough</option>
+                           <option value="2">2</option>
+                           <option value="3" selected>3 - Solid</option>
+                           <option value="4">4</option>
+                           <option value="5">5 - Nailed It</option>
+                       </select>
+                   </div>
+                   <button type="submit" class="btn-start" style="width: fit-content; margin-top: 10px; padding: 12px 30px; border-radius: 50px;">
+                       <i class="fa-solid fa-magnifying-glass-chart"></i> Analyze My Audition
+                   </button>
+               </form>
+           </section>
+
+           <section class="feedback-section" id="post-output" style="display: none; width: 100%; max-width: none;">
+               <h3><i class="fa-solid fa-chart-line" style="color: #00d2ff;"></i> Post-Audition Analysis</h3>
+               <div class="feedback-box" style="background: transparent; padding: 0; display: flex; flex-direction: column; gap: 20px;">
+                   <div>
+                       <h4 style="color: #a855f7; margin: 0 0 5px 0; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 0.5px;">What Worked</h4>
+                       <div id="out-what-worked" style="color: #ffffff; line-height: 1.6;"></div>
+                   </div>
+                   <div>
+                       <h4 style="color: #a855f7; margin: 0 0 5px 0; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 0.5px;">What To Improve</h4>
+                       <div id="out-what-to-improve" style="color: #ffffff; line-height: 1.6;"></div>
+                   </div>
+                   <div>
+                       <h4 style="color: #a855f7; margin: 0 0 5px 0; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 0.5px;">Callback Read</h4>
+                       <div id="out-callback-read" style="color: #ffffff; line-height: 1.6;"></div>
+                   </div>
+                   <div>
+                       <h4 style="color: #a855f7; margin: 0 0 5px 0; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 0.5px;">Action Items</h4>
+                       <div id="out-action-items" style="color: #ffffff; line-height: 1.6;"></div>
+                   </div>
+               </div>
+           </section>
+       </div>
+
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">Stage Mind</div>
+            <div class="footer-tagline">Rehearse. Perform. Evolve.</div>
+            <div class="footer-links">
+                <a href="about-me.html">About</a>
+                <a href="audition-cheat-sheet.html">Cheat Sheet</a>
+                <a href="track-progress.html">Track Progress</a>
+                <a href="ai-scene-partner.html" style="color: #a855f7;">✦ Premium</a>
+            </div>
+            <div class="footer-copy">© 2026 StageMind · Built by Davies Kubona · Katima Mulilo, Namibia</div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
