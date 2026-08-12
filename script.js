@@ -21,8 +21,8 @@ const DEMO_MODE = true;
 // ============================================================
 // SUPABASE (accounts + premium subscription status)
 // ============================================================
-const SUPABASE_URL      = 'https://vtdipeqnhwfnxgstkkmb.supabase.com';
-const SUPABASE_ANON_KEY = sb_publishable_3jUrg_-Zna-QN8ZwJB36Rg_OdqStiYm; // from Project Settings > API Keys
+const SUPABASE_URL      = 'https://vtdipeqnhwfnxgstkkmb.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_3jUrg_-Zna-QN8ZwJB36Rg_OdqStiYm';
 
 const supabaseClient = (window.supabase && SUPABASE_ANON_KEY !== 'PASTE_YOUR_PUBLISHABLE_KEY_HERE')
     ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
@@ -1243,6 +1243,14 @@ const StageMind = {
 
         updateNavUI() {
             const link = document.getElementById('subscribe-link');
+            const premiumLinks = document.querySelectorAll('.premium-nav-item');
+
+            if (this.currentUser && this.isPremium) {
+                premiumLinks.forEach(function(el) { el.style.display = ''; });
+            } else {
+                premiumLinks.forEach(function(el) { el.style.display = 'none'; });
+            }
+
             if (!link) return;
             if (this.currentUser && this.isPremium) {
                 link.innerText = '✦ Premium Active';
