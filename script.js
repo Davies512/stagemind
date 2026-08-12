@@ -19,6 +19,19 @@ const API_KEY = 'MY_API_KEY_HERE'; // Replace with my key from console.anthropic
 const DEMO_MODE = true;
 
 // ============================================================
+// SUPABASE (accounts + premium subscription status)
+// ============================================================
+const SUPABASE_URL      = 'https://vtdipeqnhwfnxgstkkmb.supabase.co';
+const SUPABASE_ANON_KEY = sb_publishable_3jUrg_-Zna-QN8ZwJB36Rg_OdqStiYm; // from Project Settings > API Keys
+
+const supabaseClient = (window.supabase && SUPABASE_ANON_KEY !== 'PASTE_YOUR_PUBLISHABLE_KEY_HERE')
+    ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+    : null;
+
+// Pages that require an active premium subscription to view
+const PREMIUM_PAGES = ['ai-scene-partner', 'monologue-mode', 'audition-analyze'];
+
+// ============================================================
 // RESPONSE LIMITS
 // Free users get 3 analyses per day across all 4 tools.
 // Resets at midnight. Set to 0 to disable limits.
@@ -1085,7 +1098,23 @@ const StageMind = {
                 await StageMind.auditionAnalyze.runPost();
             });
 
+            const prePlayBtn = document.getElementById('play-pre-feedback-btn');
+            if (prePlayBtn) prePlayBtn.addEventListener('click', function() {
+                StageMind.auditionAnalyze.playAloud(StageMind.auditionAnalyze.lastPreFeedback);
+            });
+            const postPlayBtn = document.getElementById('play-post-feedback-btn');
+            if (postPlayBtn) postPlayBtn.addEventListener('click', function() {
+                StageMind.auditionAnalyze.playAloud(StageMind.auditionAnalyze.lastPostFeedback);
+            });
+
             applyGlowFocus.apply(null, Array.from(document.querySelectorAll('#pre-audition-form input, #pre-audition-form textarea, #post-audition-form textarea')));
+        },
+
+        playAloud(text) {
+            if (!('speechSynthesis' in window) || !text) return;
+            window.speechSynthesis.cancel();
+            const utter = new SpeechSynthesisUtterance(text);
+            window.speechSynthesis.speak(utter);
         },
 
         showTab(which, btnEl) {
@@ -1125,6 +1154,7 @@ const StageMind = {
                 setContent('out-room-strategy',       sections.roomStrategy);
                 setContent('out-red-flags',           sections.redFlags);
                 setContent('out-confidence-anchor',   sections.confidenceAnchor);
+                this.lastPreFeedback = [sections.focusAreas, sections.roomStrategy, sections.redFlags, sections.confidenceAnchor].join('. ');
                 incrementUsage();
                 StageMind.trackProgress.autoLog(role || 'Audition Prep', 'Audition Analyze (Pre)');
             } catch (err) {
@@ -1163,6 +1193,7 @@ const StageMind = {
                 setContent('out-what-to-improve',  sections.whatToImprove);
                 setContent('out-callback-read',    sections.callbackRead);
                 setContent('out-action-items',     sections.actionItems);
+                this.lastPostFeedback = [sections.whatWorked, sections.whatToImprove, sections.callbackRead, sections.actionItems].join('. ');
                 incrementUsage();
                 StageMind.trackProgress.autoLog('Audition Reflection', 'Audition Analyze (Post)');
             } catch (err) {
@@ -1173,9 +1204,171 @@ const StageMind = {
     },
 
     // ----------------------------------------------------------
+    // ACCOUNTS & PREMIUM ACCESS
+    // ----------------------------------------------------------
+    auth: {
+        currentUser: null,
+        isPremium: false,
+
+        async init() {
+            this.injectModal();
+            await this.refreshSession();
+
+            if (supabaseClient) {
+                supabaseClient.auth.onAuthStateChange((event, session) => {
+                    this.currentUser = session ? session.user : null;
+                    if (this.currentUser) this.checkPremium();
+                    this.updateNavUI();
+                });
+            }
+        },
+
+        async refreshSession() {
+            if (!supabaseClient) return;
+            const { data } = await supabaseClient.auth.getSession();
+            this.currentUser = data.session ? data.session.user : null;
+            if (this.currentUser) await this.checkPremium();
+            this.updateNavUI();
+        },
+
+        async checkPremium() {
+            if (!supabaseClient || !this.currentUser) { this.isPremium = false; return; }
+            const { data } = await supabaseClient
+                .from('profiles')
+                .select('is_premium')
+                .eq('id', this.currentUser.id)
+                .single();
+            this.isPremium = !!(data && data.is_premium);
+        },
+
+        updateNavUI() {
+            const link = document.getElementById('subscribe-link');
+            if (!link) return;
+            if (this.currentUser && this.isPremium) {
+                link.innerText = '✦ Premium Active';
+                link.style.cursor = 'default';
+                link.onclick = function(e) { e.preventDefault(); };
+            } else if (this.currentUser) {
+                link.innerText = '✦ Upgrade to Premium';
+            } else {
+                link.innerText = '✦ Subscribe to Premium';
+            }
+        },
+
+        injectModal() {
+            if (document.getElementById('auth-modal')) return;
+            const wrap = document.createElement('div');
+            wrap.innerHTML =
+                '<div id="auth-modal" style="display:none; position:fixed; inset:0; background:rgba(6,3,12,0.85); z-index:9999; align-items:center; justify-content:center; padding:20px;">' +
+                    '<div style="background:#110c1c; border:1px solid rgba(168,85,247,0.3); border-radius:16px; padding:30px; width:100%; max-width:380px; box-sizing:border-box;">' +
+                        '<h3 id="auth-modal-title" style="margin:0 0 20px 0; text-align:center;">Sign In</h3>' +
+                        '<div style="display:flex; flex-direction:column; gap:12px;">' +
+                            '<input type="email" id="auth-email" placeholder="Email" style="background:rgba(6,3,12,0.8); border:1px solid rgba(168,85,247,0.3); border-radius:8px; padding:12px; color:white; outline:none;">' +
+                            '<input type="password" id="auth-password" placeholder="Password" style="background:rgba(6,3,12,0.8); border:1px solid rgba(168,85,247,0.3); border-radius:8px; padding:12px; color:white; outline:none;">' +
+                            '<div id="auth-error" style="color:#ff4d6d; font-size:0.85rem; display:none;"></div>' +
+                            '<button type="button" class="btn-start" id="auth-submit-btn" style="border-radius:50px; padding:12px;">Sign In</button>' +
+                            '<div style="text-align:center; font-size:0.85rem; color:#888aa0; margin-top:8px;">' +
+                                '<span id="auth-toggle-text">Need an account?</span> ' +
+                                '<a href="#" id="auth-toggle-link" style="color:#00d2ff; text-decoration:none;">Sign Up</a>' +
+                            '</div>' +
+                            '<button type="button" class="tab-btn" id="auth-close-btn" style="margin-top:6px;">Close</button>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>';
+            document.body.appendChild(wrap.firstChild);
+
+            this.mode = 'signin';
+            const self = this;
+
+            document.getElementById('auth-close-btn').addEventListener('click', function() { self.closeModal(); });
+            document.getElementById('auth-toggle-link').addEventListener('click', function(e) {
+                e.preventDefault();
+                self.mode = self.mode === 'signin' ? 'signup' : 'signin';
+                document.getElementById('auth-modal-title').innerText = self.mode === 'signin' ? 'Sign In' : 'Create Account';
+                document.getElementById('auth-submit-btn').innerText  = self.mode === 'signin' ? 'Sign In' : 'Sign Up';
+                document.getElementById('auth-toggle-text').innerText = self.mode === 'signin' ? 'Need an account?' : 'Already have one?';
+                e.target.innerText = self.mode === 'signin' ? 'Sign Up' : 'Sign In';
+            });
+            document.getElementById('auth-submit-btn').addEventListener('click', function() { self.submit(); });
+        },
+
+        openModal(e) {
+            if (e) e.preventDefault();
+            const modal = document.getElementById('auth-modal');
+            if (modal) modal.style.display = 'flex';
+        },
+
+        closeModal() {
+            const modal = document.getElementById('auth-modal');
+            if (modal) modal.style.display = 'none';
+            const err = document.getElementById('auth-error');
+            if (err) err.style.display = 'none';
+        },
+
+        async submit() {
+            if (!supabaseClient) {
+                alert('Supabase is not configured yet — add your Project URL and Publishable key in script.js.');
+                return;
+            }
+            const email    = document.getElementById('auth-email').value.trim();
+            const password = document.getElementById('auth-password').value;
+            const errBox   = document.getElementById('auth-error');
+            errBox.style.display = 'none';
+
+            const action = this.mode === 'signin'
+                ? supabaseClient.auth.signInWithPassword({ email, password })
+                : supabaseClient.auth.signUp({ email, password });
+
+            const { error } = await action;
+            if (error) {
+                errBox.innerText = error.message;
+                errBox.style.display = 'block';
+                return;
+            }
+            await this.refreshSession();
+            this.closeModal();
+            location.reload();
+        },
+
+        async signOut() {
+            if (supabaseClient) await supabaseClient.auth.signOut();
+            this.currentUser = null;
+            this.isPremium = false;
+            location.reload();
+        },
+
+        guardPremiumPage() {
+            const path = window.location.pathname;
+            const isPremiumPage = PREMIUM_PAGES.some(function(p) { return path.includes(p); });
+            if (!isPremiumPage) return;
+
+            const gateNow = () => {
+                if (this.currentUser && this.isPremium) return;
+                const main = document.querySelector('.main-content');
+                if (!main || document.getElementById('premium-gate')) return;
+                const gate = document.createElement('div');
+                gate.id = 'premium-gate';
+                gate.style.cssText = 'position:fixed; inset:0; background:rgba(6,3,12,0.92); z-index:500; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:20px;';
+                gate.innerHTML =
+                    '<i class="fa-solid fa-lock" style="font-size:2.5rem; color:#a855f7; margin-bottom:20px;"></i>' +
+                    '<h2 style="margin:0 0 10px 0;">Premium Feature</h2>' +
+                    '<p style="color:#b3b3b3; max-width:400px; margin-bottom:20px;">' + (this.currentUser ? 'Your account is not yet subscribed to Premium.' : 'Sign in and subscribe to unlock this tool.') + '</p>' +
+                    '<button type="button" class="btn-start" style="border-radius:50px; padding:12px 30px;" onclick="StageMind.auth.openModal()">' + (this.currentUser ? 'Upgrade to Premium' : 'Sign In / Sign Up') + '</button>';
+                document.body.appendChild(gate);
+            };
+
+            // Give refreshSession a moment to resolve on first load
+            setTimeout(gateNow, 400);
+        }
+    },
+
+    // ----------------------------------------------------------
     // PAGE ROUTER
     // ----------------------------------------------------------
-    router() {
+    async router() {
+        await this.auth.init();
+        this.auth.guardPremiumPage();
+
         const path = window.location.pathname;
         if (path.includes('character-builder'))     this.characterBuilder.init();
         if (path.includes('script-breakdown'))      this.scriptBreakdown.init();
