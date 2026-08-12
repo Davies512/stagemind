@@ -25,7 +25,7 @@
             <a href="ai-scene-partner.html" class="nav-item sub-item" style="color: #a855f7; opacity: 0.8;">AI Scene Partner</a>
             <a href="monologue-mode.html" class="nav-item sub-item active" style="color: #a855f7;">Monologue Mode</a>
             <a href="audition-analyze.html" class="nav-item sub-item" style="color: #a855f7; opacity: 0.8;">Audition Analyze</a>
-            <a href="#" class="nav-item" style="margin-top: 20px; color: #00ffcc; font-weight: 700; font-size: 0.85rem;">✦ Subscribe to Premium</a>
+            <a href="#" class="nav-item" id="subscribe-link" style="margin-top: 20px; color: #00ffcc; font-weight: 700; font-size: 0.85rem;" onclick="StageMind.auth.openModal(event)">✦ Subscribe to Premium</a>
         </nav>
     </aside>
 
@@ -52,6 +52,7 @@
                        <i class="fa-solid fa-microphone"></i>
                    </button>
                    <div class="mic-status" id="record-status">Tap to record your performance</div>
+                   <div style="color: #554477; font-size: 0.78rem; text-align: center; max-width: 320px;">Voice input works best on Chrome (desktop or Android). iPhone/iPad support is coming soon.</div>
                    <div class="waveform idle" id="record-waveform">
                        <span></span><span></span><span></span><span></span><span></span>
                    </div>
@@ -101,6 +102,7 @@
         </div>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="script.js"></script>
 </body>
 </html>
