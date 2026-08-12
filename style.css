@@ -394,6 +394,10 @@ body {
 /* ==========================================================================
    8. VOICE & RECORDING COMPONENTS (Premium Tools)
    ========================================================================== */
+.premium-nav-item {
+    display: none;
+}
+
 .voice-panel {
     display: flex;
     flex-direction: column;
