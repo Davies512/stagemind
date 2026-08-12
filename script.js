@@ -21,7 +21,7 @@ const DEMO_MODE = true;
 // ============================================================
 // SUPABASE (accounts + premium subscription status)
 // ============================================================
-const SUPABASE_URL      = 'https://vtdipeqnhwfnxgstkkmb.supabase.co';
+const SUPABASE_URL      = 'https://vtdipeqnhwfnxgstkkmb.supabase.com';
 const SUPABASE_ANON_KEY = sb_publishable_3jUrg_-Zna-QN8ZwJB36Rg_OdqStiYm; // from Project Settings > API Keys
 
 const supabaseClient = (window.supabase && SUPABASE_ANON_KEY !== 'PASTE_YOUR_PUBLISHABLE_KEY_HERE')
