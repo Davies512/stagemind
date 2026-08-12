@@ -30,7 +30,7 @@
             <a href="audition-analyze.html" class="nav-item sub-item" style="color: #a855f7; opacity: 0.8;">Audition Analyze</a>
 
             <!-- Subscribe -->
-            <a href="#" class="nav-item" style="margin-top: 20px; color: #00ffcc; font-weight: 700; font-size: 0.85rem;">
+            <a href="#" class="nav-item" id="subscribe-link" style="margin-top: 20px; color: #00ffcc; font-weight: 700; font-size: 0.85rem;" onclick="StageMind.auth.openModal(event)">
                 ✦ Subscribe to Premium
             </a>
         </nav>
@@ -79,6 +79,7 @@
         </div>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="script.js"></script>
 </body>
 </html>
