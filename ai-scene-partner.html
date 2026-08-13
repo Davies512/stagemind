@@ -25,6 +25,10 @@
             <a href="ai-scene-partner.html" class="premium-nav-item nav-item sub-item active" style="color: #a855f7;">AI Scene Partner</a>
             <a href="monologue-mode.html" class="premium-nav-item nav-item sub-item" style="color: #a855f7; opacity: 0.8;">Monologue Mode</a>
             <a href="audition-analyze.html" class="premium-nav-item nav-item sub-item" style="color: #a855f7; opacity: 0.8;">Audition Analyze</a>
+            <div id="user-account" style="display:none; margin-top: 30px; padding-top: 15px; border-top: 1px solid rgba(168, 85, 247, 0.15);">
+                <div id="user-email" style="font-size: 0.8rem; color: #888aa0; word-break: break-all; margin-bottom: 8px;"></div>
+                <a href="#" id="sign-out-link" class="nav-item sub-item" style="color: #ff5555;" onclick="StageMind.auth.signOut(event)">Sign Out</a>
+            </div>
             <a href="#" class="nav-item" id="subscribe-link" style="margin-top: 20px; color: #00ffcc; font-weight: 700; font-size: 0.85rem;" onclick="StageMind.auth.openModal(event)">✦ Subscribe to Premium</a>
         </nav>
     </aside>
