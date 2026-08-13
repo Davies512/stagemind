@@ -1244,12 +1244,17 @@ const StageMind = {
         updateNavUI() {
             const link = document.getElementById('subscribe-link');
             const premiumLinks = document.querySelectorAll('.premium-nav-item');
+            const accountBox = document.getElementById('user-account');
+            const emailLabel = document.getElementById('user-email');
 
             if (this.currentUser && this.isPremium) {
                 premiumLinks.forEach(function(el) { el.style.display = ''; });
             } else {
                 premiumLinks.forEach(function(el) { el.style.display = 'none'; });
             }
+
+            if (accountBox) accountBox.style.display = this.currentUser ? 'block' : 'none';
+            if (emailLabel && this.currentUser) emailLabel.innerText = this.currentUser.email;
 
             if (!link) return;
             if (this.currentUser && this.isPremium) {
@@ -1338,7 +1343,8 @@ const StageMind = {
             location.reload();
         },
 
-        async signOut() {
+        async signOut(e) {
+            if (e) e.preventDefault();
             if (supabaseClient) await supabaseClient.auth.signOut();
             this.currentUser = null;
             this.isPremium = false;
