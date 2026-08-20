@@ -1263,8 +1263,10 @@ const StageMind = {
                 link.onclick = function(e) { e.preventDefault(); };
             } else if (this.currentUser) {
                 link.innerText = '✦ Upgrade to Premium';
+                link.onclick = function(e) { e.preventDefault(); StageMind.auth.premiumCTA(); };
             } else {
                 link.innerText = '✦ Sign In / Sign Up';
+                link.onclick = function(e) { StageMind.auth.openModal(e); };
             }
         },
 
@@ -1309,6 +1311,14 @@ const StageMind = {
             if (e) e.preventDefault();
             const modal = document.getElementById('auth-modal');
             if (modal) modal.style.display = 'flex';
+        },
+
+        premiumCTA() {
+            if (this.currentUser) {
+                alert('Premium payments are coming soon! We\'ll let you know as soon as it\'s ready.');
+            } else {
+                this.openModal();
+            }
         },
 
         closeModal() {
@@ -1367,7 +1377,7 @@ const StageMind = {
                     '<i class="fa-solid fa-lock" style="font-size:2.5rem; color:#a855f7; margin-bottom:20px;"></i>' +
                     '<h2 style="margin:0 0 10px 0;">Premium Feature</h2>' +
                     '<p style="color:#b3b3b3; max-width:400px; margin-bottom:20px;">' + (this.currentUser ? 'Your account is not yet subscribed to Premium.' : 'Sign in and subscribe to unlock this tool.') + '</p>' +
-                    '<button type="button" class="btn-start" style="border-radius:50px; padding:12px 30px;" onclick="StageMind.auth.openModal()">' + (this.currentUser ? 'Upgrade to Premium' : 'Sign In / Sign Up') + '</button>';
+                    '<button type="button" class="btn-start" style="border-radius:50px; padding:12px 30px;" onclick="StageMind.auth.premiumCTA()">' + (this.currentUser ? 'Upgrade to Premium' : 'Sign In / Sign Up') + '</button>';
                 document.body.appendChild(gate);
             };
 
