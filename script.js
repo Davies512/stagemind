@@ -1264,7 +1264,7 @@ const StageMind = {
             } else if (this.currentUser) {
                 link.innerText = '✦ Upgrade to Premium';
             } else {
-                link.innerText = '✦ Subscribe to Premium';
+                link.innerText = '✦ Sign In / Sign Up';
             }
         },
 
