@@ -28,9 +28,6 @@ const supabaseClient = (window.supabase && SUPABASE_ANON_KEY !== 'PASTE_YOUR_PUB
     ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
     : null;
 
-// Pages that require an active premium subscription to view
-const PREMIUM_PAGES = ['ai-scene-partner', 'monologue-mode', 'audition-analyze'];
-
 // ============================================================
 // RESPONSE LIMITS
 // Free users get 3 analyses per day across all 4 tools.
@@ -86,7 +83,7 @@ function showLimitMessage(outputIds) {
             + '<h3 style="color:#a855f7; margin:0 0 10px 0;">Daily Limit Reached</h3>'
             + '<p style="color:#b3b3b3; line-height:1.6; margin:0 0 20px 0;">'
             + 'You have used all ' + DAILY_LIMIT + ' free analyses for today.<br>'
-            + 'Your limit resets at midnight — come back tomorrow to continue!'
+            + 'Your limit resets at midnight. Come back tomorrow to continue!'
             + '</p>'
             + '<p style="color:#554477; font-size:0.85rem; margin:0;">'
             + 'Want unlimited daily analyses? StageMind Premium is coming soon at N$50/month.'
@@ -100,54 +97,54 @@ function showLimitMessage(outputIds) {
 // ============================================================
 const DEMO_RESPONSES = {
     character: {
-        profile:       'Marcus is a 34-year-old former soldier carrying the invisible weight of a war nobody talks about anymore. His physicality is controlled and precise — every movement deliberate, as though the wrong step could trigger something. Beneath his composed exterior lives a man terrified of stillness, because stillness is when the memories come. He has built his identity around being useful to others, making his greatest fear — becoming a burden — the very thing that drives every decision he makes.',
-        motivations:   'Marcus is driven by a deep need to protect those he loves before he loses them the way he lost his unit. His goal of opening a youth boxing gym is not about sport — it is about giving troubled young men the structure and purpose that saved his own life. His guilty pleasure of watching old romantic comedies reveals the tender, hopeful version of himself he keeps carefully hidden from the world.',
-        relationships: 'Marcus struggles most with his younger sister Diana, who sees through every wall he builds and refuses to let him disappear into isolation. His relationship with his mentor Coach Reeves is the one space where he allows himself to be a student again — vulnerable, learning, imperfect. Romantically, Marcus sabotages connections the moment they deepen, unconsciously protecting others from what he believes is his inevitable breakdown.',
+        profile:       'Marcus is a 34-year-old former soldier carrying the invisible weight of a war nobody talks about anymore. His physicality is controlled and precise. Every movement is deliberate, as though the wrong step could trigger something. Beneath his composed exterior lives a man terrified of stillness, because stillness is when the memories come. He has built his identity around being useful to others, so his greatest fear, becoming a burden, is the very thing that drives every decision he makes.',
+        motivations:   'Marcus is driven by a deep need to protect those he loves before he loses them the way he lost his unit. His goal of opening a youth boxing gym is not about sport. It is about giving troubled young men the structure and purpose that saved his own life. His guilty pleasure of watching old romantic comedies reveals the tender, hopeful version of himself he keeps carefully hidden from the world.',
+        relationships: 'Marcus struggles most with his younger sister Diana, who sees through every wall he builds and refuses to let him disappear into isolation. His relationship with his mentor Coach Reeves is the one space where he allows himself to be a student again, vulnerable, learning, imperfect. Romantically, Marcus sabotages connections the moment they deepen, unconsciously protecting others from what he believes is his inevitable breakdown.',
         backstory:     'Raised in a single-parent household after his father left, Marcus became the man of the house at thirteen. Military service gave him belonging and brotherhood, but the mission that ended his career left two teammates dead and Marcus with a classified commendation he cannot bring himself to display. He returned home to a neighbourhood that had moved on without him, forcing him to rebuild an identity from scratch.'
     },
     script: {
-        characters:    'Two characters drive this scene — Zack, a charming and wildly overconfident young man whose social intelligence far outpaces his technical knowledge, and Lina, a sharp observant woman who immediately senses the performance but chooses to let it play out. Zack is your classic unreliable expert, performing competence with total commitment. Lina is the audience surrogate — she knows exactly what we know, and her patience is the scenes dramatic engine.',
-        relationship:  'These two have the charged dynamic of people who are attracted to each other but expressing it through a battle of wits. Lina holds all the actual power in this scene — she has the information advantage — but she deliberately surrenders it to see how far Zack will go. This is flirtation disguised as technical support, and both actors need to play the subtext harder than the text.',
-        conflict:      'The surface conflict is a broken laptop. The real conflict is about ego, attraction, and who will blink first. Zacks objective is to appear capable and impress Lina without being exposed. Linas objective is to enjoy watching him perform while deciding whether his charm is enough to forgive his dishonesty. Neither character wants what they say they want.',
-        stakes:        'On the surface the stakes are whether the laptop gets fixed. Underneath, Zack risks total humiliation and the loss of any chance with Lina. Lina risks wasting her time on someone who cannot be honest with her. The scene asks a deeper question — can charm substitute for competence, and should it? The audience should feel genuine tension about whether Lina will expose him or play along.',
-        turningPoint:  'The turning point arrives when Zack abandons all pretence of technical knowledge and pivots to pure personality. It is a surrender disguised as a joke. Watch for Linas micro-reaction here — this is where she decides whether to expose him or protect him, and that decision tells us everything about where this relationship is going.',
-        choices:       'The most important acting choice is the speed of Zacks recovery after each exposed lie — the faster and more confident, the funnier and more charming he becomes. Lina must resist the urge to play her knowledge too broadly — her power comes from restraint not reaction. Consider playing the entire scene as if both characters know exactly what is happening but have silently agreed to enjoy the game anyway.'
+        characters:    'Two characters drive this scene: Zack, a charming and wildly overconfident young man whose social intelligence far outpaces his technical knowledge, and Lina, a sharp observant woman who immediately senses the performance but chooses to let it play out. Zack is your classic unreliable expert, performing competence with total commitment. Lina is the audience surrogate. She knows exactly what we know, and her patience is the scene\'s dramatic engine.',
+        relationship:  'These two have the charged dynamic of people who are attracted to each other but expressing it through a battle of wits. Lina holds all the actual power in this scene, since she has the information advantage, but she deliberately surrenders it to see how far Zack will go. This is flirtation disguised as technical support, and both actors need to play the subtext harder than the text.',
+        conflict:      'The surface conflict is a broken laptop. The real conflict is about ego, attraction, and who will blink first. Zack\'s objective is to appear capable and impress Lina without being exposed. Lina\'s objective is to enjoy watching him perform while deciding whether his charm is enough to forgive his dishonesty. Neither character wants what they say they want.',
+        stakes:        'On the surface the stakes are whether the laptop gets fixed. Underneath, Zack risks total humiliation and the loss of any chance with Lina. Lina risks wasting her time on someone who cannot be honest with her. The scene asks a deeper question: can charm substitute for competence, and should it? The audience should feel genuine tension about whether Lina will expose him or play along.',
+        turningPoint:  'The turning point arrives when Zack abandons all pretence of technical knowledge and pivots to pure personality. It is a surrender disguised as a joke. Watch for Lina\'s micro-reaction here. This is where she decides whether to expose him or protect him, and that decision tells us everything about where this relationship is going.',
+        choices:       'The most important acting choice is the speed of Zack\'s recovery after each exposed lie. The faster and more confident, the funnier and more charming he becomes. Lina must resist the urge to play her knowledge too broadly, since her power comes from restraint not reaction. Consider playing the entire scene as if both characters know exactly what is happening but have silently agreed to enjoy the game anyway.'
     },
     monologue: {
-        difficulty:    'Intermediate — The material requires strong comic timing and physical self-awareness, but the emotional core is straightforward enough for a developing actor to access authentically.',
-        objective:     'The characters objective is to convince themselves — not the audience — that their actions are completely reasonable. This is a monologue about self-deception performed with total sincerity, which is where all the comedy lives. The character genuinely believes every justification they offer, and that belief must never waver.',
+        difficulty:    'Intermediate. The material requires strong comic timing and physical self-awareness, but the emotional core is straightforward enough for a developing actor to access authentically.',
+        objective:     'The character\'s objective is to convince themselves, not the audience, that their actions are completely reasonable. This is a monologue about self-deception performed with total sincerity, which is where all the comedy lives. The character genuinely believes every justification they offer, and that belief must never waver.',
         journey:       'The monologue opens with defensive pride, moves through elaborate self-justification, hits a brief moment of almost-honesty in the middle, then escapes back into delusion with a warm conclusion. Each beat should feel like a fresh attempt to win an argument the character is having with themselves. The emotional shift from defensiveness to genuine affection in the final line is the secret heart of the piece.',
-        vocal:         'The opening lines want a confident almost lecture-like authority — this person has rehearsed these justifications. As the reasoning escalates let the pace increase slightly, as though speed will make the logic more convincing. The middle section deserves a genuine slow-down — a rare moment of almost-honesty before the final escape. The last line should land with real warmth not irony.',
-        pauses:        'Take a full beat at each major transition — let the audience feel the gap between intention and reality. The longest pause in the piece belongs just before the final self-description — let the character arrive at that conclusion as if for the first time with genuine pride. Resist filling silences with movement; stillness will make the comedy land harder.',
-        tips:          'The biggest trap in comedy monologues is indicating the joke to the audience. Play every line as though you are making a serious reasonable point and let the audience find the humour themselves. Physicality should be minimal but specific — perhaps one gesture the character uses whenever they are about to say something they do not quite believe. Make the imagined space feel physically present by committing to specific spots in the room.'
+        vocal:         'The opening lines want a confident, almost lecture-like authority, since this person has rehearsed these justifications. As the reasoning escalates, let the pace increase slightly, as though speed will make the logic more convincing. The middle section deserves a genuine slow-down, a rare moment of almost-honesty before the final escape. The last line should land with real warmth not irony.',
+        pauses:        'Take a full beat at each major transition, and let the audience feel the gap between intention and reality. The longest pause in the piece belongs just before the final self-description. Let the character arrive at that conclusion as if for the first time with genuine pride. Resist filling silences with movement; stillness will make the comedy land harder.',
+        tips:          'The biggest trap in comedy monologues is indicating the joke to the audience. Play every line as though you are making a serious reasonable point and let the audience find the humour themselves. Physicality should be minimal but specific, perhaps one gesture the character uses whenever they are about to say something they do not quite believe. Make the imagined space feel physically present by committing to specific spots in the room.'
     },
     scene: {
-        intensity:     'This material calls for a sustained medium intensity with controlled peaks — think a 6 out of 10 that occasionally touches 8, never 10. The danger zone for this scene is playing the emotion too large too early, leaving nowhere to go. Begin cooler than you think the scene requires. The restraint in your early choices will make your later moments hit much harder. Pacing here is everything — let the silences do work.',
-        voice:         'Your voice should stay grounded in the chest for most of this scene — avoid the tendency to push into the upper register when emotion builds. The pauses you are not taking are your biggest missed opportunities. After a significant line — yours or your scene partners — resist the urge to respond immediately. Let the words land in your body before you speak.',
-        body:          'Keep your weight slightly forward throughout this scene — it signals engagement and investment without telegraphing aggression. Eye contact should be specific and intentional not constant. Look away when you are processing not when you are uncomfortable — the distinction tells the audience everything about your characters inner life. Find one specific gesture that belongs to this character and use only that.',
-        subtext:       'Almost nothing in this scene means what it literally says and that is where your performance lives. Every line has a want beneath it — find that want and play it instead of the words. The moments when your character is listening are as important as the moments when they speak. Your scene partner is giving you information in every line — let that information visibly land before you respond.',
-        alternatives:  'Try the scene once playing your character as someone who desperately wants to leave but cannot. Then try it as someone who desperately wants to stay but will not admit it. Notice how the same lines read completely differently depending on that single underlying choice. A third option — play every line as though it might be the last thing you ever say to this person. That urgency will transform the scenes stakes immediately.'
+        intensity:     'This material calls for a sustained medium intensity with controlled peaks. Think a 6 out of 10 that occasionally touches 8, never 10. The danger zone for this scene is playing the emotion too large too early, leaving nowhere to go. Begin cooler than you think the scene requires. The restraint in your early choices will make your later moments hit much harder. Pacing here is everything, so let the silences do work.',
+        voice:         'Your voice should stay grounded in the chest for most of this scene. Avoid the tendency to push into the upper register when emotion builds. The pauses you are not taking are your biggest missed opportunities. After a significant line, yours or your scene partner\'s, resist the urge to respond immediately. Let the words land in your body before you speak.',
+        body:          'Keep your weight slightly forward throughout this scene. It signals engagement and investment without telegraphing aggression. Eye contact should be specific and intentional not constant. Look away when you are processing not when you are uncomfortable. The distinction tells the audience everything about your character\'s inner life. Find one specific gesture that belongs to this character and use only that.',
+        subtext:       'Almost nothing in this scene means what it literally says, and that is where your performance lives. Every line has a want beneath it. Find that want and play it instead of the words. The moments when your character is listening are as important as the moments when they speak. Your scene partner is giving you information in every line. Let that information visibly land before you respond.',
+        alternatives:  'Try the scene once playing your character as someone who desperately wants to leave but cannot. Then try it as someone who desperately wants to stay but will not admit it. Notice how the same lines read completely differently depending on that single underlying choice. A third option: play every line as though it might be the last thing you ever say to this person. That urgency will transform the scene\'s stakes immediately.'
     },
     monologueMode: {
-        accuracy:      'You held the shape of the piece well — the words that landed differently from the script were mostly small connector words, which is completely normal and did not disrupt the meaning. One section in the middle drifted further from the text, so it is worth running that passage in isolation a few more times until it is locked in.',
-        vocalDelivery: 'Your pacing opened strong with real clarity, though it sped up noticeably in the second half — that usually happens when nerves creep in as the piece builds. Your pitch variety was good on the big moments but flattened out during the quieter transitions, which is exactly where a little more vocal color would help.',
-        emotional:     'There was genuine commitment in the last third of the piece — that is where you sounded most connected to the character rather than reciting. Earlier sections felt a touch presentational, like you were performing the emotion rather than living inside it. Trust the stillness more in the opening lines before the intensity needs to rise.',
-        nextSteps:     'Run the middle section on its own three times focusing only on staying in the moment, not on getting the words exact. Record yourself again and listen specifically for where your pace speeds up — mark that spot and practice slowing down right there. Finally, try the opening lines seated and quiet before standing into the rest, to find that grounded starting point.'
+        accuracy:      'You held the shape of the piece well. The words that landed differently from the script were mostly small connector words, which is completely normal and did not disrupt the meaning. One section in the middle drifted further from the text, so it is worth running that passage in isolation a few more times until it is locked in.',
+        vocalDelivery: 'Your pacing opened strong with real clarity, though it sped up noticeably in the second half. That usually happens when nerves creep in as the piece builds. Your pitch variety was good on the big moments but flattened out during the quieter transitions, which is exactly where a little more vocal color would help.',
+        emotional:     'There was genuine commitment in the last third of the piece. That is where you sounded most connected to the character rather than reciting. Earlier sections felt a touch presentational, like you were performing the emotion rather than living inside it. Trust the stillness more in the opening lines before the intensity needs to rise.',
+        nextSteps:     'Run the middle section on its own three times focusing only on staying in the moment, not on getting the words exact. Record yourself again and listen specifically for where your pace speeds up. Mark that spot and practice slowing down right there. Finally, try the opening lines seated and quiet before standing into the rest, to find that grounded starting point.'
     },
     auditionPre: {
-        focusAreas:       'Anchor your prep on the first ten seconds — casting decides more than people admit before you have said your third line, so walk in already inside the character, not warming up into it. Know your character objective in one sentence you could say out loud if asked. Everything else in the room is secondary to those two things.',
-        roomStrategy:      'Treat the reader as your actual scene partner, not an obstacle to get through — real listening reads instantly on camera and in person. Slate simply and confidently, then take a breath before starting; rushing the slate is the most common tell of nerves. If you are offered a redirect, take it as a gift, not a correction.',
-        redFlags:          'Avoid indicating emotion with your face before your body and voice have committed to it — it reads as performed rather than felt. Do not apologize or comment on your own take, even lightly; it undercuts the work you just did. Watch for filling every pause with movement — stillness is a choice, not empty space.',
-        confidenceAnchor: 'Remind yourself that you were called in because someone already believes you could be right for this — you do not need to prove your existence in the room, only show them your specific choice. Whatever happens with this one, it is one data point, not a verdict on your work.'
+        focusAreas:       'Anchor your prep on the first ten seconds. Casting decides more than people admit before you have said your third line, so walk in already inside the character, not warming up into it. Know your character objective in one sentence you could say out loud if asked. Everything else in the room is secondary to those two things.',
+        roomStrategy:      'Treat the reader as your actual scene partner, not an obstacle to get through. Real listening reads instantly on camera and in person. Slate simply and confidently, then take a breath before starting; rushing the slate is the most common tell of nerves. If you are offered a redirect, take it as a gift, not a correction.',
+        redFlags:          'Avoid indicating emotion with your face before your body and voice have committed to it. It reads as performed rather than felt. Do not apologize or comment on your own take, even lightly; it undercuts the work you just did. Watch for filling every pause with movement. Stillness is a choice, not empty space.',
+        confidenceAnchor: 'Remind yourself that you were called in because someone already believes you could be right for this. You do not need to prove your existence in the room, only show them your specific choice. Whatever happens with this one, it is one data point, not a verdict on your work.'
     },
     auditionPost: {
-        whatWorked:      'From what you have described, your preparation clearly showed — knowing your objective going in gave you something solid to play even under nerves. The moments you mention connecting with the reader are usually the ones casting remembers most, more than any technically perfect line reading.',
-        whatToImprove:   'It sounds like the pacing pressure you felt affected your listening in places — that is common and fixable with more redirect practice, not a talent gap. Next time, build in one deliberate breath before your first line so the nerves do not set the tempo for the whole take.',
-        callbackRead:    'Based on your account, this reads as a solid, professional audition rather than a clear miss — the kind that keeps you on a casting directors radar even without an immediate callback. Auditions rarely fail on one moment; they add up over a body of work with that room.',
-        actionItems:     'Write down the one redirect or note you received while it is fresh, and drill it specifically before your next audition. Log this one in Track Progress with an honest self-rating so you can see your pattern over time, not just this single outing. Then let it go — ruminating on a single room rarely improves the next one.'
+        whatWorked:      'From what you have described, your preparation clearly showed. Knowing your objective going in gave you something solid to play even under nerves. The moments you mention connecting with the reader are usually the ones casting remembers most, more than any technically perfect line reading.',
+        whatToImprove:   'It sounds like the pacing pressure you felt affected your listening in places. That is common and fixable with more redirect practice, not a talent gap. Next time, build in one deliberate breath before your first line so the nerves do not set the tempo for the whole take.',
+        callbackRead:    'Based on your account, this reads as a solid, professional audition rather than a clear miss. It\'s the kind that keeps you on a casting director\'s radar even without an immediate callback. Auditions rarely fail on one moment; they add up over a body of work with that room.',
+        actionItems:     'Write down the one redirect or note you received while it is fresh, and drill it specifically before your next audition. Log this one in Track Progress with an honest self-rating so you can see your pattern over time, not just this single outing. Then let it go. Ruminating on a single room rarely improves the next one.'
     },
     scenePartner: [
-        'Wait — say that again. I do not think I heard you right.',
+        'Wait, say that again. I do not think I heard you right.',
         'You always do this. You say something like that and expect me to just move on.',
         'Fine. If that is how you want to play it, fine.',
         'I was not expecting you to say that. Not tonight, of all nights.',
@@ -1243,28 +1240,17 @@ const StageMind = {
 
         updateNavUI() {
             const link = document.getElementById('subscribe-link');
-            const premiumLinks = document.querySelectorAll('.premium-nav-item');
             const accountBox = document.getElementById('user-account');
             const emailLabel = document.getElementById('user-email');
-
-            if (this.currentUser && this.isPremium) {
-                premiumLinks.forEach(function(el) { el.style.display = ''; });
-            } else {
-                premiumLinks.forEach(function(el) { el.style.display = 'none'; });
-            }
 
             if (accountBox) accountBox.style.display = this.currentUser ? 'block' : 'none';
             if (emailLabel && this.currentUser) emailLabel.innerText = this.currentUser.email;
 
             if (!link) return;
-            if (this.currentUser && this.isPremium) {
-                link.innerText = '✦ Premium Active';
-                link.style.cursor = 'default';
-                link.onclick = function(e) { e.preventDefault(); };
-            } else if (this.currentUser) {
-                link.innerText = '✦ Upgrade to Premium';
-                link.onclick = function(e) { e.preventDefault(); StageMind.auth.premiumCTA(); };
+            if (this.currentUser) {
+                link.style.display = 'none';
             } else {
+                link.style.display = '';
                 link.innerText = '✦ Sign In / Sign Up';
                 link.onclick = function(e) { StageMind.auth.openModal(e); };
             }
@@ -1313,14 +1299,6 @@ const StageMind = {
             if (modal) modal.style.display = 'flex';
         },
 
-        premiumCTA() {
-            if (this.currentUser) {
-                alert('Premium payments are coming soon! We\'ll let you know as soon as it\'s ready.');
-            } else {
-                this.openModal();
-            }
-        },
-
         closeModal() {
             const modal = document.getElementById('auth-modal');
             if (modal) modal.style.display = 'none';
@@ -1330,7 +1308,7 @@ const StageMind = {
 
         async submit() {
             if (!supabaseClient) {
-                alert('Supabase is not configured yet — add your Project URL and Publishable key in script.js.');
+                alert('Supabase is not configured yet. Add your Project URL and Publishable key in script.js.');
                 return;
             }
             const email    = document.getElementById('auth-email').value.trim();
@@ -1359,30 +1337,6 @@ const StageMind = {
             this.currentUser = null;
             this.isPremium = false;
             location.reload();
-        },
-
-        guardPremiumPage() {
-            const path = window.location.pathname;
-            const isPremiumPage = PREMIUM_PAGES.some(function(p) { return path.includes(p); });
-            if (!isPremiumPage) return;
-
-            const gateNow = () => {
-                if (this.currentUser && this.isPremium) return;
-                const main = document.querySelector('.main-content');
-                if (!main || document.getElementById('premium-gate')) return;
-                const gate = document.createElement('div');
-                gate.id = 'premium-gate';
-                gate.style.cssText = 'position:fixed; inset:0; background:rgba(6,3,12,0.92); z-index:500; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:20px;';
-                gate.innerHTML =
-                    '<i class="fa-solid fa-lock" style="font-size:2.5rem; color:#a855f7; margin-bottom:20px;"></i>' +
-                    '<h2 style="margin:0 0 10px 0;">Premium Feature</h2>' +
-                    '<p style="color:#b3b3b3; max-width:400px; margin-bottom:20px;">' + (this.currentUser ? 'Your account is not yet subscribed to Premium.' : 'Sign in and subscribe to unlock this tool.') + '</p>' +
-                    '<button type="button" class="btn-start" style="border-radius:50px; padding:12px 30px;" onclick="StageMind.auth.premiumCTA()">' + (this.currentUser ? 'Upgrade to Premium' : 'Sign In / Sign Up') + '</button>';
-                document.body.appendChild(gate);
-            };
-
-            // Give refreshSession a moment to resolve on first load
-            setTimeout(gateNow, 400);
         }
     },
 
@@ -1391,7 +1345,6 @@ const StageMind = {
     // ----------------------------------------------------------
     async router() {
         await this.auth.init();
-        this.auth.guardPremiumPage();
 
         const path = window.location.pathname;
         if (path.includes('character-builder'))     this.characterBuilder.init();
